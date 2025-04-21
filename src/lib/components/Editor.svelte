@@ -1,6 +1,7 @@
 <script lang="ts">
   import { githubAuth } from "$lib/stores/githubAuth";
   import { createGitHubRepoManager } from "$lib/utils/github";
+  import { keyboardShortcut } from "$lib/utils/window";
   import { onMount } from "svelte";
 
   export let owner = "";
@@ -15,6 +16,7 @@
 
   let isLoading = true;
   let isUpdating = false;
+  let updatingContent = "";
 
   let textarea: HTMLTextAreaElement;
 
@@ -33,6 +35,7 @@
           // It's a file
           fileContent = atob(content.content);
           lastSavedSha = content.sha;
+          updatingContent = fileContent;
           isLoading = false;
 
           setTimeout(() => {
@@ -79,6 +82,12 @@
   }
 
   function saveContent() {
+    if (isLoading) {
+      return;
+    }
+    if (updatingContent.trim() === fileContent.trim()) {
+      return;
+    }
     if (isUpdating) {
       // 如果正在同步数据，则延后再执行最新数据的同步，因为 git 更新需要上一个 push 的 SHA
       handleContentChange();
@@ -88,6 +97,7 @@
 
     const accessToken = $githubAuth.accessToken || "";
     const github = createGitHubRepoManager(accessToken);
+    const content = fileContent;
 
     isUpdating = true;
 
@@ -97,11 +107,12 @@
         repo,
         path,
         "Update notes",
-        btoa(fileContent),
+        btoa(content),
         lastSavedSha,
       )
       .then((result: any) => {
         lastSavedSha = result.content.sha;
+        updatingContent = content;
       })
       .catch((err) => {
         onError(err.message || "保存内容时发生错误");
@@ -119,4 +130,10 @@
   bind:value={fileContent}
   on:input={handleContentChange}
   disabled={isLoading}
+  use:keyboardShortcut={{
+    key: "s",
+    meta: true,
+    ctrl: true,
+    handle: saveContent,
+  }}
 ></textarea>

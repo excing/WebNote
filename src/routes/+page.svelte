@@ -18,7 +18,7 @@
         <Toolbar></Toolbar>
       </header>
       <Editor
-        class="w-full p-4 rounded disabled:border-none pt-20 focus:border-none focus:outline-none"
+        class="w-full text-xl p-4 rounded disabled:border-none pt-20 focus:border-none focus:outline-none"
         repo={$githubAuth.noteRepos[0].name}
         owner={$githubAuth.user.login}
         path="notes.md"

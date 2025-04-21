@@ -59,3 +59,32 @@ export function scrollHideHeader(node: HTMLElement, threshold = 100) {
     }
   };
 }
+
+// src/lib/actions/keyboardShortcut.ts
+export function keyboardShortcut(
+  node: HTMLElement,
+  shortcut: { key: string; ctrl?: boolean; meta?: boolean; shift?: boolean; alt?: boolean; handle: () => void }
+) {
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (
+      e.key === shortcut.key &&
+      ((shortcut.ctrl ? e.ctrlKey : false) ||
+        (shortcut.meta ? e.metaKey : false) ||
+        (shortcut.shift ? e.shiftKey : false) ||
+        (shortcut.alt ? e.altKey : false))
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      shortcut.handle();
+    }
+  };
+
+  window.addEventListener('keydown', handleKeyDown);
+
+  return {
+    destroy() {
+      window.removeEventListener('keydown', handleKeyDown);
+    }
+  };
+}

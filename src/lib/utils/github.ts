@@ -224,7 +224,7 @@ export class GitHubRepoManager {
     path: string,
     message: string,
     content: string,
-    sha?: string,
+    sha: string | null,
     branch?: string
   ) {
     const body: any = { message, content };

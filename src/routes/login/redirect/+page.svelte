@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import {
-    GitHubOAuth,
     getOAuthState,
     clearOAuthState,
   } from "$lib/utils/github-oauth";
   import { goto } from "$app/navigation";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { createGitHubRepoManager } from "$lib/utils/github";
 
   let userName: string | null = null;
 
@@ -46,17 +46,10 @@
 
       // 可选：获取用户信息
       if (accessToken) {
-        const userResponse = await fetch("https://api.github.com/user", {
-          headers: {
-            Authorization: `token ${accessToken}`,
-          },
-        });
-
-        if (userResponse.ok) {
-          const userData = await userResponse.json();
-          userName = userData.name || userData.login;
-        }
-
+        const github = createGitHubRepoManager(accessToken);
+        const user = await github.getCurrentUser();
+        userName = user.name;
+        githubAuth.setUser(user);
         // 将访问令牌存储到localStorage（实际应用中应使用更安全的存储方式）
         githubAuth.setAccessToken(accessToken);
         // 3秒后跳转到主页

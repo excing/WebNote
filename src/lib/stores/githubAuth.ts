@@ -8,13 +8,15 @@ interface GitHubAuthState {
   isLoading: boolean;
   error: string | null;
   noteRepos: any[]; // Add note repositories to the state
+  user: any;
 }
 
 const initialState: GitHubAuthState = {
   accessToken: null,
   isLoading: false,
   error: null,
-  noteRepos: [] // Initialize empty array
+  noteRepos: [], // Initialize empty array
+  user: null,
 };
 
 function createGitHubAuthStore() {
@@ -93,7 +95,6 @@ function createGitHubAuthStore() {
     update(state => ({ ...state, isLoading }));
   }
 
-
   // Add this method to the return object in createGitHubAuthStore()
   async function createRepository(accessToken: string | null, options: {
     name: string;
@@ -118,6 +119,10 @@ function createGitHubAuthStore() {
     }
   }
 
+  async function setUser(user: any) {
+    update(state => ({ ...state, user: user, error: null }));
+  }
+
   return {
     subscribe,
     init,
@@ -126,6 +131,7 @@ function createGitHubAuthStore() {
     isAuthenticated,
     setError,
     setLoading,
+    setUser,
     createRepository,
     addNoteRepo,
     removeNoteRepo,

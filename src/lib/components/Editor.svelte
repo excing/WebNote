@@ -16,6 +16,8 @@
   let isLoading = true;
   let isUpdating = false;
 
+  let textarea: HTMLTextAreaElement;
+
   onMount(() => {
     isLoading = true;
 
@@ -32,6 +34,10 @@
           fileContent = atob(content.content);
           lastSavedSha = content.sha;
           isLoading = false;
+
+          setTimeout(() => {
+            adjustHeight();
+          }, 150);
         }
       })
       .catch((error: any) => {
@@ -45,7 +51,26 @@
       });
   });
 
+  function adjustHeight() {
+    if (textarea) {
+      textarea.style.height = "auto"; // 先重置高度
+      const height =
+        textarea.scrollHeight < window.innerHeight
+          ? window.innerHeight
+          : textarea.scrollHeight;
+      textarea.style.height = `${height}px`; // 然后设置为内容的高度
+      console.log(
+        textarea.scrollHeight,
+        window.innerHeight,
+        window.outerHeight,
+        document.body.clientHeight,
+      );
+    }
+  }
+
   function handleContentChange() {
+    adjustHeight();
+
     if (!repo) return;
 
     // Debounce save
@@ -88,7 +113,9 @@
 </script>
 
 <textarea
+  bind:this={textarea}
   class={$$props.class}
+  style="overflow-y: hidden;"
   bind:value={fileContent}
   on:input={handleContentChange}
   disabled={isLoading}

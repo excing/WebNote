@@ -20,9 +20,9 @@
     isMobile = window.innerWidth < breakpoint;
     if (isMobile) {
       collapsed = true; // 在小屏幕上默认折叠
-      collapsedWidth = "w-16";
+      collapsedWidth = "w-14";
     } else {
-      collapsedWidth = "w-16";
+      collapsedWidth = "w-14";
     }
   }
 
@@ -37,22 +37,24 @@
 </script>
 
 <div
-  class="bg-gray-800 h-screen text-white transition-all duration-300 overflow-hidden absolute md:relative shadow-md {collapsed
+  class="bg-gray-800 h-screen text-white overflow-hidden absolute md:relative shadow-md {collapsed
     ? collapsedWidth
     : width}"
   class:translate-x-0={!isMobile || !collapsed}
 >
-  <div class="flex flex-row justify-between p-2">
-    <h1 class="text-2xl p-2 {collapsed ? 'hidden' : ''}">我的笔记</h1>
-    <button
-      class="bg-transparent border-none text-white text-2xl p-2 cursor-pointer hover:text-gray-200"
-      on:click={toggleCollapse}
-    >
-      {collapsed ? "☰" : "✕"}
-    </button>
-  </div>
+  <div class="flex flex-col h-full">
+    <div class="flex flex-row p-2">
+      <button
+        class="bg-transparent border-none text-white text-2xl p-2 cursor-pointer hover:text-gray-200"
+        on:click={toggleCollapse}
+      >
+        {collapsed ? "☰" : "✕"}
+      </button>
+      <h1 class="text-2xl p-2 {collapsed ? 'hidden' : ''}">我的笔记</h1>
+    </div>
 
-  <div class="p-5">
-    <slot />
+    <div class="p-5 flex-auto">
+      <slot />
+    </div>
   </div>
 </div>

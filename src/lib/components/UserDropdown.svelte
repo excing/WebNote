@@ -25,7 +25,6 @@
 
   // 关闭下拉菜单
   const closeDropdown = () => {
-    console.log("close user dropdown");
     isOpen = false;
   };
 
@@ -71,7 +70,7 @@
         <!-- 菜单项 -->
         {#each menuItems as item}
           <a
-            href="#"
+            href="/{item.id}"
             class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
             role="menuitem"
             tabindex="-1"

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
+    import { clickOutside } from "$lib/utils/window";
 
   export let userImage: string;
   export let userName: string = "User";
@@ -17,28 +18,6 @@
     { id: "signout", label: "Sign out", icon: "logout" },
   ];
 
-  // 定义 clickOutside 动作
-  function clickOutside(node: HTMLElement, handler: () => void) {
-    const handleClick = (event: MouseEvent) => {
-      if (
-        node &&
-        !node.contains(event.target as Node) &&
-        !event.defaultPrevented
-      ) {
-        event.stopPropagation();
-        handler();
-      }
-    };
-
-    document.addEventListener("click", handleClick, true);
-
-    return {
-      destroy() {
-        document.removeEventListener("click", handleClick, true);
-      },
-    };
-  }
-
   // 切换下拉菜单
   const toggleDropdown = () => {
     isOpen = !isOpen;
@@ -46,6 +25,7 @@
 
   // 关闭下拉菜单
   const closeDropdown = () => {
+    console.log("close user dropdown");
     isOpen = false;
   };
 

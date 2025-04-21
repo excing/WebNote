@@ -3,8 +3,11 @@
   import { createGitHubRepoManager } from "$lib/utils/github";
   import { onMount } from "svelte";
 
-  export let repo: any = "";
+  export let owner = "";
+  export let repo = "";
   export let path = "";
+
+  export let onError: (err: string) => void;
 
   let fileContent = "";
   let lastSavedSha: string | null = null;
@@ -19,7 +22,7 @@
     const accessToken = $githubAuth.accessToken || "";
     const github = createGitHubRepoManager(accessToken);
     github
-      .getContents(repo.owner.login || $githubAuth.user.login, repo.name, path)
+      .getContents(owner, repo, path)
       .then((content: any) => {
         if (Array.isArray(content)) {
           // It's a directory, not a file
@@ -65,8 +68,8 @@
 
     github
       .createOrUpdateFile(
-        repo.owner.login || $githubAuth.user.login,
-        repo.name,
+        owner,
+        repo,
         path,
         "Update notes",
         btoa(fileContent),
@@ -76,7 +79,7 @@
         lastSavedSha = result.content.sha;
       })
       .catch((err) => {
-        githubAuth.setError(err.message || "保存内容时发生错误");
+        onError(err.message || "保存内容时发生错误");
       })
       .finally(() => {
         isUpdating = false;
@@ -85,7 +88,7 @@
 </script>
 
 <textarea
-  class="w-full h-[calc(100vh-200px)] p-4 border rounded"
+  class={$$props.class}
   bind:value={fileContent}
   on:input={handleContentChange}
   disabled={isLoading}

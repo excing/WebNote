@@ -1,5 +1,4 @@
 // src/lib/github-oauth.ts
-import { dev } from '$app/environment';
 
 /**
  * GitHub OAuth 授权流程管理器
@@ -105,12 +104,14 @@ export function clearOAuthState(): void {
  * @param clientId 客户端ID
  * @param clientSecret 客户端密钥
  * @param callbackPath 回调路径
+ * @param baseUrl 基础 url
  * @param scope 请求的权限范围
  */
 export function startOAuthFlow(
   clientId: string,
   clientSecret: string,
   callbackPath: string = '/callback',
+  baseUrl: string = 'http://localhost:3002',
   scope: string = 'repo'
 ): void {
   // 生成随机状态字符串防止CSRF攻击
@@ -118,9 +119,6 @@ export function startOAuthFlow(
 
   // 保存状态到 sessionStorage 以便回调时验证
   saveOAuthState(state);
-
-  // 确定基础URL
-  const baseUrl = dev ? 'http://localhost:3002' : 'https://your-production-domain.com';
 
   // 创建重定向URI
   const redirectUri = `${baseUrl}${callbackPath}`;

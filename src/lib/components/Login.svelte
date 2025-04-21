@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import { goto } from "$app/navigation";
   import { githubAuth } from "$lib/stores/githubAuth";
   import { startOAuthFlow } from "$lib/utils/github-oauth";
@@ -16,7 +17,13 @@
     const clientSecret = import.meta.env.VITE_GITHUB_CLIENT_SECRET;
 
     // 启动OAuth流程
-    startOAuthFlow(clientId, clientSecret, "/login/redirect", "repo");
+    startOAuthFlow(
+      clientId,
+      clientSecret,
+      "/login/redirect",
+      page.url.origin,
+      "repo",
+    );
   }
 </script>
 

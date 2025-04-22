@@ -1,6 +1,9 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { clickOutside } from "$lib/utils/window";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let isOpen: boolean = false;
   export let img = "";
@@ -11,12 +14,23 @@
 
   // 切换下拉菜单
   const toggleDropdown = () => {
-    isOpen = !isOpen;
+    if (isOpen) {
+      closeDropdown();
+    } else {
+      openDropdown();
+    }
+  };
+
+  // 关闭下拉菜单
+  const openDropdown = () => {
+    isOpen = true;
+    dispatch("opened");
   };
 
   // 关闭下拉菜单
   const closeDropdown = () => {
     isOpen = false;
+    dispatch("closed");
   };
 </script>
 

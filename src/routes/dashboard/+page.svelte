@@ -2,14 +2,13 @@
   import { onMount } from "svelte";
   import { createGitHubRepoManager } from "$lib/utils/github";
   import RepositoryCard from "$lib/components/RepositoryCard.svelte";
-  import CreateRepoModal from "$lib/components/CreateRepoModal.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
   import { goto } from "$app/navigation";
   import Toolbar from "$lib/components/Toolbar.svelte";
+  import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
 
   let user: any = null;
   let repos: any[] = [];
-  let showCreateModal = false;
 
   onMount(async () => {
     githubAuth.setLoading(true);
@@ -35,8 +34,8 @@
   }
 </script>
 
-<div class="max-w-[1200px] mx-auto p-4">
-  <Toolbar></Toolbar>
+<div class="max-w-[860px] mx-auto px-2 pt-8 space-y-10">
+  <Toolbar title="仪表盘"></Toolbar>
 
   <main>
     {#if $githubAuth.isLoading}
@@ -58,38 +57,16 @@
         </button>
       </div>
     {:else}
-      <!-- Create Repository Modal -->
-      <CreateRepoModal
-        isOpen={showCreateModal}
-        closeModal={() => (showCreateModal = false)}
-      />
-
       <!-- Rest of your dashboard content remains the same -->
-      <section class="mb-8">
-        <h2 class="text-xl font-semibold mb-4">
-          我的笔记仓库 ({$githubAuth.noteRepos.length})
-          <button
-            on:click={() => (showCreateModal = true)}
-            class="p-2 md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
-            title="新建仓库"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 md:hidden"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            <span class="hidden md:inline">新建仓库</span>
-          </button>
-        </h2>
+      <section class="mb-8 space-y-5">
+        <div class="flex justify-between">
+          <h2 class="text-xl font-semibold">
+            我的笔记仓库 ({$githubAuth.noteRepos.length})
+          </h2>
+          <CreateRepoButton
+            class="p-2 text-sm md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
+          />
+        </div>
         {#if $githubAuth.noteRepos.length > 0}
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {#each $githubAuth.noteRepos as repo}

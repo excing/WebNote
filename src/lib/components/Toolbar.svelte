@@ -3,6 +3,8 @@
   import { githubAuth } from "$lib/stores/githubAuth";
   import UserDropdown from "./UserDropdown.svelte";
 
+  export let title = "我的笔记";
+
   function handleSelect(event: CustomEvent) {
     console.log("Selected item:", event.detail.item);
     // 根据选择的项执行相应操作
@@ -29,17 +31,17 @@
 </script>
 
 <header class="flex justify-between items-center {$$props.class}">
-  <a href="/">
-    <h1 class="text-2xl font-bold flex items-center space-x-2">
+  <h1 class="text-2xl font-bold flex items-center space-x-2">
+    <a href="/">
       <img
         class="w-6 h-6"
         src="/favicon.png"
         alt="Web Note Icon"
         title="Web Note Icon"
       />
-      <span class="hidden md:inline">我的笔记</span>
-    </h1>
-  </a>
+    </a>
+    <span class="hidden md:inline">{title}</span>
+  </h1>
   <slot />
   {#if $githubAuth.user}
     <div class="flex items-center gap-4">

@@ -14,12 +14,19 @@
     updated_at: string;
   };
 
+  // 是否确认移除
+  let isRemove = false;
+
   // Check if this repo is selected
   $: isSelected = $githubAuth.noteRepos.some((r) => r.id === repository.id);
 
   function toggleSelection() {
     if (isSelected) {
-      githubAuth.removeNoteRepo(repository.id);
+      if (isRemove) {
+        githubAuth.removeNoteRepo(repository.id);
+      } else {
+        isRemove = true;
+      }
     } else {
       githubAuth.addNoteRepo(repository);
     }
@@ -41,13 +48,19 @@
         </span>
       {/if}
     </h3>
-    <Dropdown class="flex flex-col w-42">
+    <Dropdown
+      class="flex flex-col w-42"
+      on:opened={() => {
+        isRemove = false;
+      }}
+    >
       <a
         href={repository.html_url}
         target="_blank"
         class="rounded-t-lg flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
         role="menuitem"
         tabindex="-1"
+        data-close-dropdown
         on:click={() => {}}
       >
         <span class="mr-3 ic-github h-5 w-5"></span>
@@ -57,6 +70,7 @@
         class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
         role="menuitem"
         tabindex="-1"
+        data-close-dropdown
         on:click={() => {}}
       >
         <span class="mr-3 ic-devices h-5 w-5"></span>
@@ -69,8 +83,11 @@
             ? "bg-red-100 text-red-700 hover:bg-red-200"
             : "bg-blue-100 text-blue-700 hover:bg-blue-200"
         }`}
+        role="menuitem"
+        tabindex="-1"
+        data-close-dropdown={isRemove || !isSelected}
       >
-        {isSelected ? "移除" : "添加为笔记"}
+        {isSelected ? (isRemove ? "确认移除" : "移除") : "添加为笔记"}
       </button>
     </Dropdown>
   </div>

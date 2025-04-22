@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
   import Home from "$lib/components/Home.svelte";
   import RepositoryCard from "$lib/components/RepositoryCard.svelte";
@@ -8,25 +9,44 @@
 
 <Home class="max-w-[860px] mx-auto px-2 pt-8 space-y-10">
   <Toolbar></Toolbar>
-  <section class=" space-y-5">
-    <div class="flex justify-between">
-      <h2 class="text-xl font-semibold">最近笔记</h2>
+  {#if false}
+    <section class=" space-y-5">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-semibold">最近笔记</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+  {/if}
+
+  {#if $githubAuth.noteRepos.length == 0}
+    <div class="text-center p-8">
+      <h2 class="text-xl font-bold mb-4">选择一个笔记仓库</h2>
+      <p class="mb-4">您还没有添加任何笔记仓库</p>
+      <div class="flex flex-wrap items-end justify-center space-x-4">
+        <CreateRepoButton
+          responsive={false}
+          class="px-12 py-1 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
+        />
+        <a href="/dashboard" class="text-sm text-gray-400 hover:text-gray-800">
+          去仪表盘添加仓库
+        </a>
+      </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  </section>
-  <section class=" space-y-5">
-    <div class="flex justify-between">
-      <h2 class="text-xl font-semibold">
-        我的笔记仓库 ({$githubAuth.noteRepos.length})
-      </h2>
-      <CreateRepoButton
-        class="p-2 text-sm md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
-      />
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {#each $githubAuth.noteRepos as repository}
-        <RepositoryCard {repository} />
-      {/each}
-    </div>
-  </section>
+  {:else}
+    <section class=" space-y-5">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-semibold">
+          我的笔记仓库 ({$githubAuth.noteRepos.length})
+        </h2>
+        <CreateRepoButton
+          class="p-2 text-sm md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
+        />
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {#each $githubAuth.noteRepos as repository}
+          <RepositoryCard {repository} />
+        {/each}
+      </div>
+    </section>
+  {/if}
 </Home>

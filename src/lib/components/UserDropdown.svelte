@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
-    import { clickOutside } from "$lib/utils/window";
+  import { clickOutside } from "$lib/utils/window";
 
   export let userImage: string;
   export let userName: string = "User";

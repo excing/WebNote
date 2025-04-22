@@ -3,12 +3,20 @@ export function clickOutside(node: HTMLElement, handler: () => void) {
   const handleClick = (event: MouseEvent) => {
     if (
       node &&
-      (!node.contains(event.target as Node) || (event.target as HTMLElement).hasAttribute("data-close-dropdown")) &&
       !event.defaultPrevented
     ) {
-      event.preventDefault();
-      event.stopPropagation();
-      handler();
+      if (!node.contains(event.target as Node)) {
+        event.preventDefault();
+        event.stopPropagation();
+        handler();
+      } else {
+        const target = (event.target as HTMLElement)
+        const has = target.hasAttribute("data-close-dropdown");
+        const value = target.getAttribute("data-close-dropdown");
+        if (has && value !== 'false') {
+          handler();
+        }
+      }
     }
   };
 

@@ -42,7 +42,7 @@
     id="user-menu-button"
     aria-expanded={isOpen}
     aria-haspopup="true"
-    on:click={toggleDropdown}
+    on:click|preventDefault={toggleDropdown}
   >
     {#if alt}
       <span class="sr-only">{title}</span>

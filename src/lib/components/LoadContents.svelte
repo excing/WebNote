@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createGitHubRepoManager } from "$lib/utils/github";
+  import { createGitHubRepoManager, type GitContent } from "$lib/utils/github";
   import { onMount } from "svelte";
   import Loader from "./Loader.svelte";
 
@@ -8,15 +8,7 @@
   export let repo = "";
 
   let isLoading = true;
-  let contents: {
-    name: string;
-    path: string;
-    sha: string;
-    size: number;
-    html_url: string;
-    download_url: string;
-    type: "file";
-  }[];
+  let contents: GitContent[];
   let err = "";
 
   onMount(() => {
@@ -47,7 +39,7 @@
   });
 </script>
 
-<Loader {isLoading}>
+<Loader {isLoading} class={$$props.class}>
   {#if err}
     <div class="text-2xl text-red">{err}</div>
   {:else}

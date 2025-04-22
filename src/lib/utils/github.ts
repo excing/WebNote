@@ -1,6 +1,26 @@
 // github-repo-manager.ts
 
+export interface GitRepository {
+  id: number;
+  name: string;
+  description: string | null;
+  private: boolean;
+  language: string | null;
+  stargazers_count: number;
+  html_url: string;
+  created_at: string;
+  updated_at: string;
+}
 
+export interface GitContent {
+  name: string;
+  path: string;
+  sha: string;
+  size: number;
+  html_url: string;
+  download_url: string;
+  type: string;
+}
 
 /**
  * GitHub Repository Manager - 通过 OAuth Apps API 和原生 fetch 操作用户仓库
@@ -114,7 +134,7 @@ export class GitHubRepoManager {
     perPage = 30,
     page = 1
   } = {}) {
-    return this.request('/user/repos', {
+    return this.request<GitRepository[]>('/user/repos', {
       params: {
         type,
         sort,
@@ -131,7 +151,7 @@ export class GitHubRepoManager {
    * @param repo 仓库名称
    */
   async getRepository(owner: string, repo: string) {
-    return this.request(`/repos/${owner}/${repo}`);
+    return this.request<GitRepository>(`/repos/${owner}/${repo}`);
   }
 
   /**
@@ -208,7 +228,7 @@ export class GitHubRepoManager {
     const params: Record<string, string> = {};
     if (ref) params.ref = ref;
 
-    return this.request(`/repos/${owner}/${repo}/contents/${path}`, { params });
+    return this.request<GitContent[] | GitContent>(`/repos/${owner}/${repo}/contents/${path}`, { params });
   }
 
   /**

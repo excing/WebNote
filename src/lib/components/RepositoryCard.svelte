@@ -1,18 +1,12 @@
 <script lang="ts">
   import { githubAuth } from "$lib/stores/githubAuth";
+  import type { GitRepository } from "$lib/utils/github";
+  import { createEventDispatcher } from "svelte";
   import Dropdown from "./Dropdown.svelte";
 
-  export let repository: {
-    id: number;
-    name: string;
-    description: string | null;
-    private: boolean;
-    language: string | null;
-    stargazers_count: number;
-    html_url: string;
-    created_at: string;
-    updated_at: string;
-  };
+  const dispatch = createEventDispatcher();
+
+  export let repository: GitRepository;
 
   // 是否确认移除
   let isRemove = false;
@@ -37,7 +31,10 @@
   }
 </script>
 
-<div class="border-black co-border-6 rounded-lg p-4 bg-white relative">
+<a
+  href="/{repository.name}"
+  class="border-black co-border-6 rounded-lg p-4 bg-white relative"
+>
   <!-- Selection indicator -->
   <div class="flex justify-between">
     <h3 class="text-xl font-medium mb-2">
@@ -108,4 +105,4 @@
   <div class="text-sm" title={title()}>
     {new Date(repository.updated_at).toLocaleString()}
   </div>
-</div>
+</a>

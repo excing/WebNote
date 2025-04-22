@@ -1,5 +1,6 @@
 <script lang="ts">
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { clickOutside } from "$lib/utils/window";
 
   export let isOpen: boolean = false;
   export let closeModal: () => void;
@@ -43,7 +44,7 @@
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
   >
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
-      <div class="p-6">
+      <div class="p-6" use:clickOutside={closeModal}>
         <h2 class="text-2xl font-bold mb-4">创建新仓库</h2>
 
         {#if error}
@@ -54,7 +55,7 @@
 
         <form on:submit|preventDefault={handleSubmit}>
           <div class="mb-4">
-            <label for="repoName" class="block text-sm font-medium mb-1"
+            <label for="repoName" class="block text-left text-sm font-medium mb-1"
               >仓库名称 *</label
             >
             <input
@@ -67,7 +68,7 @@
           </div>
 
           <div class="mb-4">
-            <label for="repoDescription" class="block text-sm font-medium mb-1"
+            <label for="repoDescription" class="block text-left text-sm font-medium mb-1"
               >描述</label
             >
             <textarea

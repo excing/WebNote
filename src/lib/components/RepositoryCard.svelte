@@ -37,7 +37,7 @@
   }
 </script>
 
-<div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm relative">
+<div class="border-black co-border-6 rounded-lg p-4 bg-white relative">
   <!-- Selection indicator -->
   <div class="flex justify-between">
     <h3 class="text-xl font-medium mb-2">
@@ -66,6 +66,16 @@
         <span class="mr-3 ic-github h-5 w-5"></span>
         查看 GitHub
       </a>
+      <button
+        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        role="menuitem"
+        tabindex="-1"
+        data-close-dropdown
+        on:click={() => {}}
+      >
+        <span class="mr-3 ic-file h-5 w-5"></span>
+        新文件
+      </button>
       <button
         class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
         role="menuitem"

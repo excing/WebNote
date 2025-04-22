@@ -73,7 +73,7 @@
         data-close-dropdown
         on:click={() => {}}
       >
-        <span class="mr-3 ic-file h-5 w-5"></span>
+        <span class="mr-3 ic-dir h-5 w-5"></span>
         新文件
       </button>
       <button
@@ -83,7 +83,7 @@
         data-close-dropdown
         on:click={() => {}}
       >
-        <span class="mr-3 ic-devices h-5 w-5"></span>
+        <span class="mr-3 ic-flag h-5 w-5"></span>
         设为默认仓库
       </button>
       <button

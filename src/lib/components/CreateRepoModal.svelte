@@ -41,9 +41,9 @@
 
 {#if isOpen}
   <div
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+    class="fixed inset-0 bg-gray-400/10 flex items-center justify-center p-4 z-50"
   >
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+    <div class="bg-white rounded-lg co-border-6 w-full max-w-md">
       <div class="p-6" use:clickOutside={closeModal}>
         <h2 class="text-2xl font-bold mb-4">创建新仓库</h2>
 
@@ -55,8 +55,9 @@
 
         <form on:submit|preventDefault={handleSubmit}>
           <div class="mb-4">
-            <label for="repoName" class="block text-left text-sm font-medium mb-1"
-              >仓库名称 *</label
+            <label
+              for="repoName"
+              class="block text-left text-sm font-medium mb-1">仓库名称 *</label
             >
             <input
               id="repoName"
@@ -68,8 +69,9 @@
           </div>
 
           <div class="mb-4">
-            <label for="repoDescription" class="block text-left text-sm font-medium mb-1"
-              >描述</label
+            <label
+              for="repoDescription"
+              class="block text-left text-sm font-medium mb-1">描述</label
             >
             <textarea
               id="repoDescription"
@@ -77,7 +79,7 @@
               class="w-full px-3 py-2 border rounded"
               placeholder="Optional description"
               rows="3"
-            />
+            ></textarea>
           </div>
 
           <div class="mb-6 flex items-center">

@@ -39,7 +39,7 @@
   <!-- 用户头像按钮 -->
   <button
     type="button"
-    class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    class="flex items-center text-sm rounded-full bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
     id="user-menu-button"
     aria-expanded={isOpen}
     aria-haspopup="true"

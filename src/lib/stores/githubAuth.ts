@@ -111,7 +111,7 @@ function createGitHubAuthStore() {
       addNoteRepo(newRepo)
 
       return newRepo;
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message || 'Failed to create repository');
       throw error;
     } finally {

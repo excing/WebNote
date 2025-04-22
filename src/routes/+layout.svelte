@@ -2,8 +2,8 @@
 	import { onMount } from "svelte";
 	import "../app.css";
 	import { githubAuth } from "$lib/stores/githubAuth";
-	import { goto } from "$app/navigation";
 	import { createGitHubRepoManager } from "$lib/utils/github";
+	import Loader from "$lib/components/Loader.svelte";
 
 	let { children } = $props();
 	let loading = $state(true);
@@ -24,8 +24,6 @@
 	});
 </script>
 
-{#if loading}
-	loading...
-{:else}
+<Loader isLoading={loading}>
 	{@render children()}
-{/if}
+</Loader>

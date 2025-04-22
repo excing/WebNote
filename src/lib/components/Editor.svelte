@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { githubAuth } from "$lib/stores/githubAuth";
   import { createGitHubRepoManager } from "$lib/utils/github";
   import { keyboardShortcut } from "$lib/utils/window";
   import { onMount } from "svelte";
 
+  export let token = "";
   export let owner = "";
   export let repo = "";
   export let path = "";
@@ -23,8 +23,7 @@
   onMount(() => {
     isLoading = true;
 
-    const accessToken = $githubAuth.accessToken || "";
-    const github = createGitHubRepoManager(accessToken);
+    const github = createGitHubRepoManager(token);
     github
       .getContents(owner, repo, path)
       .then((content: any) => {
@@ -95,7 +94,7 @@
     }
     if (!repo || !fileContent) return;
 
-    const accessToken = $githubAuth.accessToken || "";
+    const accessToken = token || "";
     const github = createGitHubRepoManager(accessToken);
     const content = fileContent;
 

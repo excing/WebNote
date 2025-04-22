@@ -14,7 +14,7 @@
         // 打开设置
         break;
       case "dashboard":
-        goto("/dashboard")
+        goto("/dashboard");
         break;
       case "signout":
         // 处理退出登录
@@ -28,16 +28,18 @@
   }
 </script>
 
-<header class="flex justify-between items-center py-4">
-  <h1 class="text-2xl font-bold flex items-center space-x-2">
-    <img
-      class="w-6 h-6"
-      src="/favicon.png"
-      alt="Web Note Icon"
-      title="Web Note Icon"
-    />
-    <span class="hidden md:inline">我的笔记</span>
-  </h1>
+<header class="flex justify-between items-center {$$props.class}">
+  <a href="/">
+    <h1 class="text-2xl font-bold flex items-center space-x-2">
+      <img
+        class="w-6 h-6"
+        src="/favicon.png"
+        alt="Web Note Icon"
+        title="Web Note Icon"
+      />
+      <span class="hidden md:inline">我的笔记</span>
+    </h1>
+  </a>
   <slot />
   {#if $githubAuth.user}
     <div class="flex items-center gap-4">

@@ -3,9 +3,10 @@ export function clickOutside(node: HTMLElement, handler: () => void) {
   const handleClick = (event: MouseEvent) => {
     if (
       node &&
-      !node.contains(event.target as Node) &&
+      (!node.contains(event.target as Node) || (event.target as HTMLElement).hasAttribute("data-close-dropdown")) &&
       !event.defaultPrevented
     ) {
+      event.preventDefault();
       event.stopPropagation();
       handler();
     }

@@ -2,8 +2,6 @@
 import { build, files, version } from '$service-worker';
 
 // Create a unique cache name for this deployment
-// 1741496496157
-// 1741497241877
 const CACHE = `cache-${version}`;
 
 const ASSETS = [
@@ -12,7 +10,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  console.log(`service worker version: ${version}`);
+  console.log(`install service worker version: ${version}`);
 
   // Create a new cache and add all files to it
   async function addFilesToCache() {
@@ -24,7 +22,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log(`service worker version: ${version}`);
+  console.log(`activate service worker version: ${version}`);
 
   // Remove previous cached data from disk
   async function deleteOldCaches() {
@@ -56,13 +54,6 @@ self.addEventListener('fetch', (event) => {
       if (response) {
         return response;
       }
-    }
-
-    // 优先从缓存返回数据
-    const response = await cache.match(event.request);
-
-    if (response) {
-      return response;
     }
 
     // for everything else, try the network first, but

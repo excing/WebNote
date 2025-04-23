@@ -21,8 +21,7 @@
   <div class="flex flex-row overflow-auto">
     <div class="flex-1 flex flex-col">
       <header
-        use:scrollHideHeader={100}
-        class="fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50"
+        class="pr-3 py-3 fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50"
       >
         <Toolbar
           {title}

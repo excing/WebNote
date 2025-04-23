@@ -8,9 +8,11 @@
   export let repo = "";
   export let path = "";
 
+  // todo 由调用者处理全部数据，包括错误信息和文件数据
+  // 比如 404，文本文件等
   let isLoading = true;
   let contents: GitContent[];
-  let err = "";
+  let error = "";
 
   $: {
     requestContents(owner, repo, path);
@@ -18,7 +20,7 @@
 
   function requestContents(owner: string, repo: string, path: string) {
     isLoading = true;
-    err = "";
+    error = "";
     const github = createGitHubRepoManager(token);
     github
       .getContents(owner, repo, path)
@@ -28,16 +30,16 @@
           contents = content;
         } else {
           // It's a file
-          err = "It's a file";
+          error = "Error: It's a file";
         }
       })
-      .catch((error: any) => {
+      .catch((err: any) => {
         // File doesn't exist, create it
-        if (error.message.includes("404")) {
+        if (err.message.includes("404")) {
           // 找不到文件
-          err = "404 Not found";
+          error = "404 NOT FOUND";
         } else {
-          err = error.message;
+          error = err.message;
         }
       })
       .finally(() => {
@@ -51,8 +53,8 @@
 </script>
 
 <Loader {isLoading} class={$$props.class}>
-  {#if err}
-    <div class="text-2xl text-red">{err}</div>
+  {#if error}
+    <div class="text-2xl text-red-400">{error}</div>
   {:else}
     <slot {contents} />
   {/if}

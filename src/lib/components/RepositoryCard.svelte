@@ -65,6 +65,7 @@
       </a>
       <button
         class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        class:hidden={!isSelected}
         role="menuitem"
         tabindex="-1"
         data-close-dropdown
@@ -75,6 +76,7 @@
       </button>
       <button
         class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        class:hidden={!isSelected}
         role="menuitem"
         tabindex="-1"
         data-close-dropdown

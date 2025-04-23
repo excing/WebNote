@@ -17,10 +17,17 @@
   let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
   let isLoading = true;
-  let isUpdating = false;
+  export let isUpdating = false;
   let updatingContent = "";
 
   let textarea: HTMLTextAreaElement;
+
+  // SvelteKit 导航守卫
+  // beforeNavigate((navigation) => {
+  //   if (!confirm("未保存的更改将丢失，确定要离开吗？")) {
+  //     navigation.cancel();
+  //   }
+  // });
 
   onMount(() => {
     isLoading = true;
@@ -76,7 +83,7 @@
     saveTimer = setTimeout(() => saveContent(), 3000);
   }
 
-  function saveContent() {
+  export function saveContent() {
     if (isLoading) {
       return;
     }

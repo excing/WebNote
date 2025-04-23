@@ -3,9 +3,16 @@
   import Home from "$lib/components/Home.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { pathname } from "$lib/utils/path.js";
   import { scrollHideHeader } from "$lib/utils/window";
 
   export let data;
+
+  let title = pathname(data.path);
+  let path = `/${data.repo}/${data.path}`;
+
+  let editer: Editor;
+  let isUpdating = false;
 
   function onEditorSyncError(err: string) {}
 </script>
@@ -15,12 +22,33 @@
     <div class="flex-1 flex flex-col">
       <header
         use:scrollHideHeader={100}
-        class="fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50 px-4"
+        class="fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50"
       >
-        <Toolbar></Toolbar>
+        <Toolbar
+          {title}
+          {path}
+          isHomeButtonVisible={false}
+          isBackButtonVisible={true}
+          isUserButtonVisible={false}
+        >
+          <div slot="left">
+            <span class="ic-refresh w-5 h-5 block"></span>
+          </div>
+          <div slot="right">
+            <button
+              class="text-sm text-white rounded py-1 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+              disabled={isUpdating}
+              on:click={() => {
+                editer.saveContent();
+              }}>保存</button
+            >
+          </div>
+        </Toolbar>
       </header>
       <Editor
-        class="w-full text-xl p-4 rounded disabled:border-none pt-20 focus:border-none focus:outline-none"
+        bind:this={editer}
+        bind:isUpdating
+        class="w-full text-xl px-2 py-4 rounded disabled:border-none pt-15 focus:border-none focus:outline-none"
         token={$githubAuth.accessToken || ""}
         repo={data.repo}
         owner={$githubAuth.user.login}

@@ -1,17 +1,18 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import CreateFileModal from "$lib/components/CreateFileModal.svelte";
-  import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
   import FloatButton from "$lib/components/FloatButton.svelte";
   import Home from "$lib/components/Home.svelte";
   import LoadContents from "$lib/components/LoadContents.svelte";
   import LoadRepository from "$lib/components/LoadRepository.svelte";
+  import MultiNavigation from "$lib/components/MultiNavigation.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { filesize } from "$lib/utils/format.js";
 
   export let data;
 
   let isNewFile = false;
+  let prevPath = `/${data.repo}/${data.path.split("/").slice(0, -1).join("/")}`;
 
   function toggleNewFileModal() {
     isNewFile = !isNewFile;
@@ -20,7 +21,9 @@
 
 <!-- 默认加载器 -->
 <Home class="max-w-[860px] h-screen relative mx-auto px-2 pt-8 space-y-10">
-  <Toolbar title={data.repo}></Toolbar>
+  <Toolbar>
+    <MultiNavigation slot="left" repo={data.repo} path={data.path} />
+  </Toolbar>
   <LoadRepository
     token={$githubAuth.accessToken || ""}
     repo={data.repo}
@@ -48,10 +51,7 @@
         </button>
       </div>
       {#if data.path}
-        <a
-          href="/{data.repo}/{data.path.split('/').slice(0, -1).join('/')}"
-          class="text-lg flex flex-row items-center"
-        >
+        <a href={prevPath} class="text-lg flex flex-row items-center">
           <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
           ..
         </a>
@@ -71,7 +71,8 @@
             class="text-lg flex flex-row items-center"
           >
             <div class="mr-2 h-5 w-5 ic-file ic-c-success"></div>
-            {content.name} <span class="text-sm">({content.size}B)</span>
+            {content.name}
+            <span class="text-sm">({filesize(content.size)})</span>
           </a>
         {/if}
       {/each}
@@ -98,7 +99,7 @@
       brightness(89%) contrast(95%);
   }
 
-  .ic-c-error {
+  /* .ic-c-error {
     filter: invert(23%) sepia(90%) saturate(2346%) hue-rotate(3deg)
       brightness(93%) contrast(108%);
   }
@@ -106,5 +107,5 @@
   .ic-c-white {
     filter: invert(93%) sepia(100%) saturate(30%) hue-rotate(142deg)
       brightness(107%) contrast(108%);
-  }
+  } */
 </style>

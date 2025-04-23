@@ -1,9 +1,17 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { parentPath } from "$lib/utils/path";
   import UserDropdown from "./UserDropdown.svelte";
+  import { page } from "$app/state";
 
-  export let title = "我的笔记";
+  export let title = "";
+  export let path = page.url.pathname;
+  export let isHomeButtonVisible = true;
+  export let isBackButtonVisible = false;
+  export let isUserButtonVisible = true;
+
+  let prevPath = parentPath(path);
 
   function handleSelect(event: CustomEvent) {
     console.log("Selected item:", event.detail.item);
@@ -31,8 +39,8 @@
 </script>
 
 <header class="flex justify-between items-center {$$props.class}">
-  <h1 class="text-2xl font-bold flex items-center space-x-2">
-    <a href="/">
+  <h1 class="text-xl font-bold flex items-center space-x-2">
+    <a href="/" class:hidden={!isHomeButtonVisible}>
       <img
         class="w-6 h-6"
         src="/favicon.png"
@@ -40,19 +48,24 @@
         title="Web Note Icon"
       />
     </a>
-    <span class="hidden md:inline">{title}</span>
+    <a href={prevPath} aria-label="back" class:hidden={!isBackButtonVisible}>
+      <span class="w-9 h-9 ic-chevron-left block -mr-2" title="back"></span>
+    </a>
+    <span class="hidden md:inline" class:hidden={!title}>{title}</span>
+    <slot name="left" />
   </h1>
   <slot />
   {#if $githubAuth.user}
     <div class="flex items-center gap-4">
-      <div class="flex items-center gap-2">
+      <slot name="right" />
+      {#if isUserButtonVisible}
         <UserDropdown
           userImage={$githubAuth.user.avatar_url}
           userName={$githubAuth.user.name}
           userEmail={$githubAuth.user.email}
           on:select={handleSelect}
         />
-      </div>
+      {/if}
     </div>
   {:else}
     <button

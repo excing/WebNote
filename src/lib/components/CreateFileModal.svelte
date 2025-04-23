@@ -33,7 +33,6 @@
 
     isLoading = true;
     error = null;
-    closeModal();
 
     github
       .createOrUpdateFile(
@@ -48,6 +47,7 @@
         goto(`/${repo}/${filepath}/write`);
         fileName = "";
         fileContent = "";
+        closeModal();
       })
       .catch((err) => {
         error = err.message;

@@ -8,7 +8,7 @@
 </script>
 
 <Home class="max-w-[860px] mx-auto px-2 pt-8 space-y-10">
-  <Toolbar></Toolbar>
+  <Toolbar title="我的笔记"></Toolbar>
   {#if false}
     <section class=" space-y-5">
       <div class="flex justify-between">

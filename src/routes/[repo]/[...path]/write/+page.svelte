@@ -32,7 +32,10 @@
           isUserButtonVisible={false}
         >
           <div slot="left">
-            <span class="ic-refresh w-5 h-5 block"></span>
+            <span
+              class="ic-refresh w-5 h-5 block"
+              class:animate-spin={isUpdating}
+            ></span>
           </div>
           <div slot="right">
             <button

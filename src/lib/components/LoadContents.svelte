@@ -6,15 +6,22 @@
   export let token = "";
   export let owner = "";
   export let repo = "";
+  export let path = "";
 
   let isLoading = true;
   let contents: GitContent[];
   let err = "";
 
-  onMount(() => {
+  $: {
+    requestContents(owner, repo, path);
+  }
+
+  function requestContents(owner: string, repo: string, path: string) {
+    isLoading = true;
+    err = "";
     const github = createGitHubRepoManager(token);
     github
-      .getContents(owner, repo, "")
+      .getContents(owner, repo, path)
       .then((content: any) => {
         if (Array.isArray(content)) {
           // It's a directory, not a file
@@ -36,6 +43,10 @@
       .finally(() => {
         isLoading = false;
       });
+  }
+
+  onMount(() => {
+    requestContents(owner, repo, path);
   });
 </script>
 

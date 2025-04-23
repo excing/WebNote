@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import CreateFileModal from "$lib/components/CreateFileModal.svelte";
+  import FloatButton from "$lib/components/FloatButton.svelte";
   import Home from "$lib/components/Home.svelte";
   import LoadContents from "$lib/components/LoadContents.svelte";
   import LoadRepository from "$lib/components/LoadRepository.svelte";
@@ -6,10 +9,16 @@
   import { githubAuth } from "$lib/stores/githubAuth";
 
   export let data;
+
+  let isNewFile = false;
+
+  function toggleNewFileModal() {
+    isNewFile = !isNewFile;
+  }
 </script>
 
 <!-- 默认加载器 -->
-<Home class="max-w-[860px] mx-auto px-2 pt-8 space-y-10">
+<Home class="max-w-[860px] h-screen relative mx-auto px-2 pt-8 space-y-10">
   <Toolbar title={data.repo}></Toolbar>
   <LoadRepository
     class="bg-gray-200 p-4"
@@ -18,32 +27,53 @@
     owner={$githubAuth.user.login}
     let:repository
   >
-    <h2 class="text-xl">{repository.name}</h2>
     <p>{repository.description}</p>
   </LoadRepository>
   <LoadContents
     class="space-y-2 w-full"
     token={$githubAuth.accessToken || ""}
-    repo={data.repo}
+    bind:repo={data.repo}
+    bind:path={data.path}
     owner={$githubAuth.user.login}
     let:contents
   >
+    {#if data.path}
+      <a
+        href="/{data.repo}/{data.path.split('/').slice(0, -1).join('/')}"
+        class="text-lg flex flex-row items-center"
+      >
+        <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
+        ..
+      </a>
+    {/if}
     {#each contents as content}
-      <div class="flex flex-row items-center">
-        {#if content.type === "dir"}
+      {#if content.type === "dir"}
+        <a
+          href="/{data.repo}/{content.path}"
+          class="text-lg flex flex-row items-center"
+        >
           <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
-          <a href="/{data.repo}/{content.path}" class="text-lg"
-            >{content.name}
-          </a>
-        {:else}
+          {content.name}
+        </a>
+      {:else}
+        <a
+          href="/{data.repo}/{content.path}/write"
+          class="text-lg flex flex-row items-center"
+        >
           <div class="mr-2 h-5 w-5 ic-file ic-c-success"></div>
-          <a href="/{data.repo}/{content.path}/write" class="text-lg"
-            >{content.name}
-          </a>
-        {/if}
-      </div>
+          {content.name}
+        </a>
+      {/if}
     {/each}
   </LoadContents>
+
+  <FloatButton onClick={toggleNewFileModal}>+</FloatButton>
+  <CreateFileModal
+    bind:isOpen={isNewFile}
+    repo={data.repo}
+    path={data.path}
+    closeModal={toggleNewFileModal}
+  ></CreateFileModal>
 </Home>
 
 <style>

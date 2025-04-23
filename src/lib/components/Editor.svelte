@@ -2,6 +2,7 @@
   import { createGitHubRepoManager } from "$lib/utils/github";
   import { keyboardShortcut } from "$lib/utils/window";
   import { onMount } from "svelte";
+  import Loader from "./Loader.svelte";
 
   export let token = "";
   export let owner = "";
@@ -32,7 +33,7 @@
           fileContent = "It's a directory, not a file";
         } else {
           // It's a file
-          fileContent = atob(content.content);
+          fileContent = decodeURIComponent(atob(content.content));
           lastSavedSha = content.sha;
           updatingContent = fileContent;
           isLoading = false;
@@ -61,12 +62,6 @@
           ? window.innerHeight
           : textarea.scrollHeight;
       textarea.style.height = `${height}px`; // 然后设置为内容的高度
-      console.log(
-        textarea.scrollHeight,
-        window.innerHeight,
-        window.outerHeight,
-        document.body.clientHeight,
-      );
     }
   }
 
@@ -106,7 +101,7 @@
         repo,
         path,
         "Update notes",
-        btoa(content),
+        btoa(encodeURIComponent(content)),
         lastSavedSha,
       )
       .then((result: any) => {
@@ -122,17 +117,19 @@
   }
 </script>
 
-<textarea
-  bind:this={textarea}
-  class={$$props.class}
-  style="overflow-y: hidden;"
-  bind:value={fileContent}
-  on:input={handleContentChange}
-  disabled={isLoading}
-  use:keyboardShortcut={{
-    key: "s",
-    meta: true,
-    ctrl: true,
-    handle: saveContent,
-  }}
-></textarea>
+<Loader {isLoading} class={$$props.class}>
+  <textarea
+    bind:this={textarea}
+    class={$$props.class}
+    style="overflow-y: hidden;"
+    bind:value={fileContent}
+    on:input={handleContentChange}
+    disabled={isLoading}
+    use:keyboardShortcut={{
+      key: "s",
+      meta: true,
+      ctrl: true,
+      handle: saveContent,
+    }}
+  ></textarea>
+</Loader>

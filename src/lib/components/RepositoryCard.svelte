@@ -58,7 +58,7 @@
         role="menuitem"
         tabindex="-1"
         data-close-dropdown
-        on:click={() => {}}
+        on:click|preventDefault={() => {}}
       >
         <span class="mr-3 ic-github h-5 w-5"></span>
         查看 GitHub
@@ -68,9 +68,9 @@
         role="menuitem"
         tabindex="-1"
         data-close-dropdown
-        on:click={() => {}}
+        on:click|preventDefault={() => {}}
       >
-        <span class="mr-3 ic-dir h-5 w-5"></span>
+        <span class="mr-3 ic-file h-5 w-5"></span>
         新文件
       </button>
       <button
@@ -78,13 +78,13 @@
         role="menuitem"
         tabindex="-1"
         data-close-dropdown
-        on:click={() => {}}
+        on:click|preventDefault={() => {}}
       >
         <span class="mr-3 ic-flag h-5 w-5"></span>
         设为默认仓库
       </button>
       <button
-        on:click={toggleSelection}
+        on:click|preventDefault={toggleSelection}
         class={`rounded-b-lg px-4 py-2 text-sm transition-colors ${
           isSelected
             ? "bg-red-100 text-red-700 hover:bg-red-200"

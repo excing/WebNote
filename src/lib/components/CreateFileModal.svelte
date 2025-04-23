@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { encode64 } from "$lib/utils/encode";
   import { createGitHubRepoManager } from "$lib/utils/github";
   import Modal from "./Modal.svelte";
 
@@ -40,7 +41,7 @@
         repo,
         filepath,
         "Create notes",
-        btoa(encodeURIComponent(fileContent)),
+        encode64(fileContent),
         "",
       )
       .then((result: any) => {

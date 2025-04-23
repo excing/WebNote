@@ -71,7 +71,7 @@
             class="text-lg flex flex-row items-center"
           >
             <div class="mr-2 h-5 w-5 ic-file ic-c-success"></div>
-            {content.name}
+            {content.name} <span class="text-sm">({content.size}B)</span>
           </a>
         {/if}
       {/each}

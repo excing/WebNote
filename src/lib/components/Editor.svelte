@@ -3,6 +3,7 @@
   import { keyboardShortcut } from "$lib/utils/window";
   import { onMount } from "svelte";
   import Loader from "./Loader.svelte";
+  import { decode64, encode64 } from "$lib/utils/encode";
 
   export let token = "";
   export let owner = "";
@@ -33,7 +34,7 @@
           fileContent = "It's a directory, not a file";
         } else {
           // It's a file
-          fileContent = decodeURIComponent(atob(content.content));
+          fileContent = decode64(content.content);
           lastSavedSha = content.sha;
           updatingContent = fileContent;
           isLoading = false;
@@ -101,7 +102,7 @@
         repo,
         path,
         "Update notes",
-        btoa(encodeURIComponent(content)),
+        encode64(content),
         lastSavedSha,
       )
       .then((result: any) => {

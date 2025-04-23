@@ -11,7 +11,15 @@
   export let isBackButtonVisible = false;
   export let isUserButtonVisible = true;
 
-  let prevPath = parentPath(path);
+  function handleBack() {
+    console.log("history.length", history.length);
+
+    if (2 < history.length) {
+      history.back();
+    } else {
+      goto(parentPath(path));
+    }
+  }
 
   function handleSelect(event: CustomEvent) {
     console.log("Selected item:", event.detail.item);
@@ -48,9 +56,13 @@
         title="Web Note Icon"
       />
     </a>
-    <a href={prevPath} aria-label="back" class:hidden={!isBackButtonVisible}>
+    <button
+      on:click={handleBack}
+      aria-label="back"
+      class:hidden={!isBackButtonVisible}
+    >
       <span class="w-9 h-9 ic-chevron-left block -mr-2" title="back"></span>
-    </a>
+    </button>
     <span class="hidden md:inline" class:hidden={!title}>{title}</span>
     <slot name="left" />
   </h1>

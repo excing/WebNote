@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import CreateFileModal from "$lib/components/CreateFileModal.svelte";
+  import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
   import FloatButton from "$lib/components/FloatButton.svelte";
   import Home from "$lib/components/Home.svelte";
   import LoadContents from "$lib/components/LoadContents.svelte";
@@ -21,7 +22,6 @@
 <Home class="max-w-[860px] h-screen relative mx-auto px-2 pt-8 space-y-10">
   <Toolbar title={data.repo}></Toolbar>
   <LoadRepository
-    class="bg-gray-200 p-4"
     token={$githubAuth.accessToken || ""}
     repo={data.repo}
     owner={$githubAuth.user.login}
@@ -37,34 +37,45 @@
     owner={$githubAuth.user.login}
     let:contents
   >
-    {#if data.path}
-      <a
-        href="/{data.repo}/{data.path.split('/').slice(0, -1).join('/')}"
-        class="text-lg flex flex-row items-center"
-      >
-        <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
-        ..
-      </a>
-    {/if}
-    {#each contents as content}
-      {#if content.type === "dir"}
+    <section class=" space-y-5">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-semibold">我的笔记</h2>
+        <button
+          class="text-sm px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          on:click={toggleNewFileModal}
+        >
+          新建文件
+        </button>
+      </div>
+      {#if data.path}
         <a
-          href="/{data.repo}/{content.path}"
+          href="/{data.repo}/{data.path.split('/').slice(0, -1).join('/')}"
           class="text-lg flex flex-row items-center"
         >
           <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
-          {content.name}
-        </a>
-      {:else}
-        <a
-          href="/{data.repo}/{content.path}/write"
-          class="text-lg flex flex-row items-center"
-        >
-          <div class="mr-2 h-5 w-5 ic-file ic-c-success"></div>
-          {content.name}
+          ..
         </a>
       {/if}
-    {/each}
+      {#each contents as content}
+        {#if content.type === "dir"}
+          <a
+            href="/{data.repo}/{content.path}"
+            class="text-lg flex flex-row items-center"
+          >
+            <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
+            {content.name}
+          </a>
+        {:else}
+          <a
+            href="/{data.repo}/{content.path}/write"
+            class="text-lg flex flex-row items-center"
+          >
+            <div class="mr-2 h-5 w-5 ic-file ic-c-success"></div>
+            {content.name}
+          </a>
+        {/if}
+      {/each}
+    </section>
   </LoadContents>
 
   <FloatButton onClick={toggleNewFileModal}>+</FloatButton>

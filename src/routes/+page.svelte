@@ -43,7 +43,7 @@
         </h2>
         <a
           href="/dashboard"
-          class="p-2 text-sm md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
+          class="text-sm px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
         >
           添加仓库
         </a>

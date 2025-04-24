@@ -1,7 +1,7 @@
 // src/lib/stores/githubAuth.ts
 import { writable } from 'svelte/store';
 import { goto } from '$app/navigation';
-import { createGitHubRepoManager } from '$lib/utils/github';
+import { createGitHubRepoManager, type GitContent, type GitRepository } from '$lib/utils/github';
 
 interface GitHubAuthState {
   accessToken: string | null;
@@ -9,6 +9,10 @@ interface GitHubAuthState {
   error: string | null;
   noteRepos: any[]; // Add note repositories to the state
   user: any;
+  historyNotes: {
+    repo: string,
+    content: GitContent,
+  }[]; // 历史文件编辑记录
 }
 
 const initialState: GitHubAuthState = {
@@ -17,6 +21,7 @@ const initialState: GitHubAuthState = {
   error: null,
   noteRepos: [], // Initialize empty array
   user: null,
+  historyNotes: [],
 };
 
 function createGitHubAuthStore() {
@@ -27,11 +32,26 @@ function createGitHubAuthStore() {
     update(state => {
       const token = localStorage.getItem('github_access_token');
       const savedNoteRepos = localStorage.getItem('github_note_repos');
+      const savedHistoryNotes = localStorage.getItem('history_notes');
       return {
         ...state,
         accessToken: token,
-        noteRepos: savedNoteRepos ? JSON.parse(savedNoteRepos) : []
+        noteRepos: savedNoteRepos ? JSON.parse(savedNoteRepos) : [],
+        historyNotes: savedHistoryNotes ? JSON.parse(savedHistoryNotes) : []
       };
+    });
+  }
+
+  // Add methods for note 
+  function addContent(repo: string, content: GitContent) {
+    update(state => {
+      // Check if repo already exists
+      const exists = state.historyNotes.some(r => (r.repo === repo && r.content.path === content.path));
+      if (exists) return state;
+
+      const historyNotes = [...state.historyNotes, { repo: repo, content: content }];
+      localStorage.setItem('history_notes', JSON.stringify(historyNotes));
+      return { ...state, historyNotes: historyNotes };
     });
   }
 
@@ -135,6 +155,7 @@ function createGitHubAuthStore() {
     createRepository,
     addNoteRepo,
     removeNoteRepo,
+    addContent,
     clearNoteRepos
   };
 }

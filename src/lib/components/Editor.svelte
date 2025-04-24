@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import Loader from "./Loader.svelte";
   import { decode64, encode64 } from "$lib/utils/encode";
+  import { githubAuth } from "$lib/stores/githubAuth";
 
   export let token = "";
   export let owner = "";
@@ -45,6 +46,8 @@
           lastSavedSha = content.sha;
           updatingContent = fileContent;
           isLoading = false;
+
+          githubAuth.addContent(repo, content);
 
           setTimeout(() => {
             adjustHeight();

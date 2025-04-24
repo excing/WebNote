@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import ContentItem from "$lib/components/ContentItem.svelte";
   import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
   import Home from "$lib/components/Home.svelte";
   import RepositoryCard from "$lib/components/RepositoryCard.svelte";
@@ -9,12 +10,26 @@
 
 <Home class="max-w-[860px] mx-auto px-2 space-y-10">
   <Toolbar title="我的笔记" class="h-14 md:h-16"></Toolbar>
-  {#if false}
+  {#if $githubAuth.historyNotes.length != 0}
     <section class=" space-y-5">
       <div class="flex justify-between">
-        <h2 class="text-xl font-semibold">最近笔记</h2>
+        <h2 class="text-xl font-semibold">最近笔记<span class="text-sm text-gray-400">(按时间排序)</span></h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div class=" space-y-3">
+        {#each $githubAuth.historyNotes as note, i}
+          {#if i < 3}
+            <ContentItem
+              isMenuVisible={false}
+              type={note.content.type}
+              repo={note.repo}
+              path={note.content.path}
+              name={note.content.name}
+              sha={note.content.sha}
+              size={note.content.size}
+            />
+          {/if}
+        {/each}
+      </div>
     </section>
   {/if}
 

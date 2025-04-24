@@ -58,7 +58,6 @@
         role="menuitem"
         tabindex="-1"
         data-close-dropdown
-        on:click|preventDefault={() => {}}
       >
         <span class="mr-3 ic-github h-5 w-5"></span>
         查看 GitHub

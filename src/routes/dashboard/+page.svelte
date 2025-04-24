@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { createGitHubRepoManager } from "$lib/utils/github";
   import RepositoryCard from "$lib/components/RepositoryCard.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
@@ -22,11 +22,15 @@
 
       user = await github.getCurrentUser();
       repos = await github.listRepositories({ type: "all" });
-    } catch (err) {
+    } catch (err: any) {
       githubAuth.setError(err.message || "加载数据时发生错误");
     } finally {
       githubAuth.setLoading(false);
     }
+  });
+
+  onDestroy(() => {
+    console.log("destory dashboard");
   });
 
   function logout() {
@@ -34,8 +38,8 @@
   }
 </script>
 
-<div class="max-w-[860px] mx-auto px-2 pt-8 space-y-10">
-  <Toolbar title="仪表盘"></Toolbar>
+<div class="max-w-[860px] mx-auto px-2 space-y-10">
+  <Toolbar class="h-14 md:h-16" title="仪表盘"></Toolbar>
 
   <main>
     {#if $githubAuth.isLoading}
@@ -58,8 +62,8 @@
       </div>
     {:else}
       <!-- Rest of your dashboard content remains the same -->
-      <section class="mb-8 space-y-5">
-        <div class="flex justify-between">
+      <section class="mb-8">
+        <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-semibold">
             我的笔记仓库 ({$githubAuth.noteRepos.length})
           </h2>

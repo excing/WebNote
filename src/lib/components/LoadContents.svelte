@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createGitHubRepoManager, type GitContent } from "$lib/utils/github";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import Loader from "./Loader.svelte";
 
   export let token = "";
@@ -49,6 +49,10 @@
 
   onMount(() => {
     requestContents(owner, repo, path);
+  });
+
+  onDestroy(() => {
+    console.log(`destory ${repo}/${path}`);
   });
 </script>
 

@@ -12,7 +12,7 @@
   export let data;
 
   let isNewFile = false;
-  let prevPath = `/${data.repo}/${data.path.split("/").slice(0, -1).join("/")}`;
+  $: prevPath = `/${data.repo}/${data.path.split("/").slice(0, -1).join("/")}`;
 
   function toggleNewFileModal() {
     isNewFile = !isNewFile;

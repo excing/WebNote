@@ -3,6 +3,7 @@
   import type { GitRepository } from "$lib/utils/github";
   import { createEventDispatcher } from "svelte";
   import Dropdown from "./Dropdown.svelte";
+  import CreateFileModal from "./CreateFileModal.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -10,6 +11,8 @@
 
   // 是否确认移除
   let isRemove = false;
+  // 是否创建新文件
+  let isNewFile = false;
 
   // Check if this repo is selected
   $: isSelected = $githubAuth.noteRepos.some((r) => r.id === repository.id);
@@ -26,8 +29,8 @@
     }
   }
 
-  function title() {
-    return `创建于 ${new Date(repository.created_at).toLocaleString()}\n更新于 ${new Date(repository.updated_at).toLocaleString()}`;
+  function toggleNewFileModal() {
+    isNewFile = !isNewFile;
   }
 </script>
 
@@ -68,22 +71,24 @@
         role="menuitem"
         tabindex="-1"
         data-close-dropdown
-        on:click|preventDefault={() => {}}
+        on:click|preventDefault={toggleNewFileModal}
       >
         <span class="mr-3 ic-file h-5 w-5"></span>
         新文件
       </button>
-      <button
-        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-        class:hidden={!isSelected}
-        role="menuitem"
-        tabindex="-1"
-        data-close-dropdown
-        on:click|preventDefault={() => {}}
-      >
-        <span class="mr-3 ic-flag h-5 w-5"></span>
-        设为默认仓库
-      </button>
+      {#if false}
+        <button
+          class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+          class:hidden={!isSelected}
+          role="menuitem"
+          tabindex="-1"
+          data-close-dropdown
+          on:click|preventDefault={() => {}}
+        >
+          <span class="mr-3 ic-flag h-5 w-5"></span>
+          设为默认仓库
+        </button>
+      {/if}
       <button
         on:click|preventDefault={toggleSelection}
         class={`rounded-b-lg px-4 py-2 text-sm transition-colors ${
@@ -103,7 +108,12 @@
   <p class="text-gray-600 mb-4 min-h-[3rem]">
     {repository.description || "无描述"}
   </p>
-  <div class="text-sm" title={title()}>
-    {new Date(repository.updated_at).toLocaleString()}
+  <div class="text-sm">
+    {new Date(repository.created_at).toLocaleString()}
   </div>
 </a>
+<CreateFileModal
+  bind:isOpen={isNewFile}
+  repo={repository.name}
+  closeModal={toggleNewFileModal}
+></CreateFileModal>

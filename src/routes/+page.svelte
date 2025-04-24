@@ -36,14 +36,17 @@
       </div>
     </div>
   {:else}
-    <section class=" space-y-5">
-      <div class="flex justify-between">
+    <section class="">
+      <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">
           我的笔记仓库 ({$githubAuth.noteRepos.length})
         </h2>
-        <CreateRepoButton
+        <a
+          href="/dashboard"
           class="p-2 text-sm md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
-        />
+        >
+          添加仓库
+        </a>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {#each $githubAuth.noteRepos as repository}

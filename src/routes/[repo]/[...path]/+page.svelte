@@ -44,8 +44,8 @@
     owner={$githubAuth.user.login}
     let:contents
   >
-    <section class=" space-y-5">
-      <div class="flex justify-between">
+    <section class="">
+      <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">我的笔记</h2>
         <button
           class="text-sm px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
@@ -66,33 +66,36 @@
           </button>
         </div>
       {/if}
-      {#if data.path}
-        <ContentItem
-          type="dir"
-          repo={data.repo}
-          path={data.path}
-          name=".."
-          size={0}
-          url={prevPath}
-          isMenuVisible={false}
-        />
-      {/if}
-      {#each contents as content}
-        <ContentItem
-          type={content.type}
-          repo={data.repo}
-          path={content.path}
-          name={content.name}
-          sha={content.sha}
-          size={content.size}
-          on:deleted={() => {
-            loadContentsEl.reload();
-          }}
-          on:renamed={() => {
-            loadContentsEl.reload();
-          }}
-        />
-      {/each}
+
+      <div class="space-y-3">
+        {#if data.path}
+          <ContentItem
+            type="dir"
+            repo={data.repo}
+            path={data.path}
+            name=".."
+            size={0}
+            url={prevPath}
+            isMenuVisible={false}
+          />
+        {/if}
+        {#each contents as content}
+          <ContentItem
+            type={content.type}
+            repo={data.repo}
+            path={content.path}
+            name={content.name}
+            sha={content.sha}
+            size={content.size}
+            on:deleted={() => {
+              loadContentsEl.reload();
+            }}
+            on:renamed={() => {
+              loadContentsEl.reload();
+            }}
+          />
+        {/each}
+      </div>
     </section>
   </LoadContents>
 

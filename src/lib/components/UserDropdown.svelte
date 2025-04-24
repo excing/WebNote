@@ -10,8 +10,9 @@
 
   // 下拉菜单项
   const menuItems = [
-    { id: "profile", label: "Your Profile", icon: "user-circle" },
-    { id: "settings", label: "Settings", icon: "cog" },
+    // todo
+    // { id: "profile", label: "Your Profile", icon: "user-circle" },
+    // { id: "settings", label: "Settings", icon: "cog" },
     { id: "dashboard", label: "Dashboard", icon: "book-open" },
     { id: "signout", label: "Sign out", icon: "logout" },
   ];

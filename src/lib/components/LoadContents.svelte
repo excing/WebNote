@@ -8,10 +8,8 @@
   export let repo = "";
   export let path = "";
 
-  // todo 由调用者处理全部数据，包括错误信息和文件数据
-  // 比如 404，文本文件等
   let isLoading = true;
-  let contents: GitContent[];
+  let contents: GitContent[] = [];
   let error = "";
 
   $: {
@@ -51,9 +49,7 @@
       });
   }
 
-  onMount(() => {
-    requestContents(owner, repo, path);
-  });
+  onMount(() => {});
 
   onDestroy(() => {
     console.log(`destory ${repo}/${path}`);
@@ -61,7 +57,7 @@
 </script>
 
 <Loader {isLoading} class={$$props.class}>
-  {#if error}
+  {#if error && !error.includes("404")}
     <div class="text-2xl text-red-400">{error}</div>
   {:else}
     <slot {contents} />

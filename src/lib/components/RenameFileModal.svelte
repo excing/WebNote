@@ -98,4 +98,7 @@
       </button>
     </div>
   </form>
+  <p class="text-sm text-red-400 mt-4">
+    * 执行成功后，数据更新有延迟(约1min)，请稍后刷新
+  </p>
 </Modal>

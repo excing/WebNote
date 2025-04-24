@@ -54,6 +54,18 @@
           新建文件
         </button>
       </div>
+
+      {#if contents.length == 0}
+        <div class="mt-20 flex flex-col items-center justify-between space-y-3">
+          <div class="text-7xl text-gray-500">404</div>
+          <button
+            class="text-sm px-6 py-2 rounded text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            on:click={toggleNewFileModal}
+          >
+            快去写一个笔记吧 🥳
+          </button>
+        </div>
+      {/if}
       {#if data.path}
         <ContentItem
           type="dir"

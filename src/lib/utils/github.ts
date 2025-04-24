@@ -399,6 +399,8 @@ export class GitHubRepoManager {
       throw new Error('路径指向的是文件而非目录');
     }
 
+    console.log(oldPath, newPath);
+
     // 递归移动所有内容
     for (const item of contents) {
       const newItemPath = item.path.replace(oldPath, newPath);

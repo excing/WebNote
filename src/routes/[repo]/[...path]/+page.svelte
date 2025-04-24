@@ -1,6 +1,7 @@
 <script lang="ts">
   import ContentItem from "$lib/components/ContentItem.svelte";
   import CreateFileModal from "$lib/components/CreateFileModal.svelte";
+  import DeleteFileModal from "$lib/components/DeleteFileModal.svelte";
   import FloatButton from "$lib/components/FloatButton.svelte";
   import Home from "$lib/components/Home.svelte";
   import LoadContents from "$lib/components/LoadContents.svelte";
@@ -8,14 +9,13 @@
   import MultiNavigation from "$lib/components/MultiNavigation.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
-  import { createGitHubRepoManager } from "$lib/utils/github.js";
 
   export let data;
 
+  let loadContentsEl: LoadContents;
+
   let isNewFile = false;
   $: prevPath = `/${data.repo}/${data.path.split("/").slice(0, -1).join("/")}`;
-
-  // const github = createGitHubRepoManager($githubAuth.accessToken || "");
 
   function toggleNewFileModal() {
     isNewFile = !isNewFile;
@@ -36,6 +36,7 @@
     <p>{repository.description}</p>
   </LoadRepository>
   <LoadContents
+    bind:this={loadContentsEl}
     class="space-y-2 w-full"
     token={$githubAuth.accessToken || ""}
     bind:repo={data.repo}
@@ -70,8 +71,14 @@
           repo={data.repo}
           path={content.path}
           name={content.name}
+          sha={content.sha}
           size={content.size}
-          on:rename={() => {}}
+          on:deleted={() => {
+            loadContentsEl.reload();
+          }}
+          on:renamed={() => {
+            loadContentsEl.reload();
+          }}
         />
       {/each}
     </section>

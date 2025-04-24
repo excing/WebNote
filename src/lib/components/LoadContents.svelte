@@ -18,6 +18,10 @@
     requestContents(owner, repo, path);
   }
 
+  export function reload() {
+    requestContents(owner, repo, path);
+  }
+
   function requestContents(owner: string, repo: string, path: string) {
     isLoading = true;
     error = "";

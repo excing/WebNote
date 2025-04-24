@@ -31,7 +31,7 @@
       repoName = "";
       repoDescription = "";
       isPrivate = false;
-    } catch (err) {
+    } catch (err: any) {
       error = err.message;
     } finally {
       isLoading = false;
@@ -58,6 +58,7 @@
         bind:value={repoName}
         class="w-full px-3 py-2 border rounded"
         placeholder="my-new-repo"
+        autocomplete="off"
         required
       />
     </div>
@@ -80,6 +81,7 @@
       <input
         id="isPrivate"
         type="checkbox"
+        autocomplete="off"
         bind:checked={isPrivate}
         class="mr-2"
       />

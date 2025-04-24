@@ -1,17 +1,22 @@
 <script lang="ts">
   import { filesize } from "$lib/utils/format";
+  import DeleteFileModal from "./DeleteFileModal.svelte";
   import Dropdown from "./Dropdown.svelte";
-  import TwoClickButton from "./TwoClickButton.svelte";
   import { createEventDispatcher } from "svelte";
+  import RenameFileModal from "./RenameFileModal.svelte";
   const dispatch = createEventDispatcher();
 
   export let type;
   export let repo;
   export let path;
   export let name;
+  export let sha = "";
   export let size;
   export let url = "";
   export let isMenuVisible = true;
+
+  let isDeleteFile = false;
+  let isRenameFile = false;
 
   $: href =
     url || (type === "dir" ? `/${repo}/${path}` : `/${repo}/${path}/write`);
@@ -36,21 +41,44 @@
         class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
         data-close-dropdown
         on:click|preventDefault={() => {
+          isRenameFile = true;
           dispatch("rename");
         }}
       >
         重命名
       </button>
-      <TwoClickButton
+      <button
         class="px-4 py-2 text-sm transition-colors bg-red-100 text-red-700 hover:bg-red-200"
-        on:click={() => {
+        data-close-dropdown
+        on:click|preventDefault={() => {
+          isDeleteFile = true;
           dispatch("delete");
         }}
       >
-        <span>删除</span>
-        <span slot="clicked">确认删除</span>
-      </TwoClickButton>
+        删除
+      </button>
     </Dropdown>
+    <DeleteFileModal
+      bind:isOpen={isDeleteFile}
+      {type}
+      {repo}
+      {path}
+      {sha}
+      closeModal={() => {
+        isDeleteFile = false;
+      }}
+      on:deleted
+    ></DeleteFileModal>
+    <RenameFileModal
+      bind:isOpen={isRenameFile}
+      {type}
+      {repo}
+      {path}
+      closeModal={() => {
+        isRenameFile = false;
+      }}
+      on:renamed
+    ></RenameFileModal>
   {/if}
 </div>
 

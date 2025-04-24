@@ -22,7 +22,7 @@ export function processMultiLevelPath(repo: string, path: string) {
 }
 
 export const parentPath = (path: string) => {
-  return path.split('/').slice(0, -1).join('/') || '/';
+  return path.split('/').slice(0, -1).join('/') || '';
 }
 
 export const pathname = (path: string) => {

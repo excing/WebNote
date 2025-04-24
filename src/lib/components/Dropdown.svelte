@@ -65,7 +65,10 @@
       tabindex="-1"
       use:clickOutside={closeDropdown}
     >
-      <div class={$$props.class} role="none">
+      <div
+        class="list-container rounded-md overflow-hidden {$$props.class}"
+        role="none"
+      >
         <slot />
       </div>
     </div>

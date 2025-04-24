@@ -13,6 +13,8 @@ export interface GitRepository {
 }
 
 export interface GitContent {
+  content: string; // encode: base64
+  encoding: string; // value: base64
   name: string;
   path: string;
   sha: string;
@@ -284,6 +286,144 @@ export class GitHubRepoManager {
       method: 'DELETE',
       body
     });
+  }
+
+  /**
+ * 重命名或移动文件
+ * @param owner 仓库所有者
+ * @param repo 仓库名称
+ * @param oldPath 原始文件路径
+ * @param newPath 新文件路径
+ * @param message 提交信息
+ * @param branch 分支名称，默认为仓库的默认分支
+ */
+  async renameFile(
+    owner: string,
+    repo: string,
+    oldPath: string,
+    newPath: string,
+    message: string,
+    branch?: string
+  ) {
+    // 先获取原文件内容
+    const fileContent = await this.getContents(owner, repo, oldPath, branch);
+    if (Array.isArray(fileContent)) {
+      throw new Error('路径指向的是目录而非文件');
+    }
+
+    await this.createOrUpdateFile(
+      owner,
+      repo,
+      newPath,
+      message,
+      fileContent.content,
+      fileContent.sha,
+      branch
+    );
+
+    return this.deleteFile(
+      owner,
+      repo,
+      oldPath,
+      message,
+      fileContent.sha,
+      branch
+    );
+  }
+
+  /**
+   * 删除文件夹及其内容
+   * @param owner 仓库所有者
+   * @param repo 仓库名称
+   * @param path 文件夹路径
+   * @param message 提交信息
+   * @param branch 分支名称，默认为仓库的默认分支
+   */
+  async deleteDirectory(
+    owner: string,
+    repo: string,
+    path: string,
+    message: string,
+    branch?: string
+  ) {
+    const contents = await this.getContents(owner, repo, path, branch);
+    if (!Array.isArray(contents)) {
+      throw new Error('路径指向的是文件而非目录');
+    }
+
+    // 递归删除所有内容
+    for (const item of contents) {
+      if (item.type === 'file') {
+        await this.deleteFile(
+          owner,
+          repo,
+          item.path,
+          message,
+          item.sha,
+          branch
+        );
+      } else if (item.type === 'dir') {
+        await this.deleteDirectory(
+          owner,
+          repo,
+          item.path,
+          message,
+          branch
+        );
+      }
+    }
+
+    // 删除空目录本身（GitHub API会自动处理空目录删除）
+    return true;
+  }
+
+  /**
+   * 重命名或移动文件夹
+   * @param owner 仓库所有者
+   * @param repo 仓库名称
+   * @param oldPath 原始文件夹路径
+   * @param newPath 新文件夹路径
+   * @param message 提交信息
+   * @param branch 分支名称，默认为仓库的默认分支
+   */
+  async renameDirectory(
+    owner: string,
+    repo: string,
+    oldPath: string,
+    newPath: string,
+    message: string,
+    branch?: string
+  ) {
+    const contents = await this.getContents(owner, repo, oldPath, branch);
+    if (!Array.isArray(contents)) {
+      throw new Error('路径指向的是文件而非目录');
+    }
+
+    // 递归移动所有内容
+    for (const item of contents) {
+      const newItemPath = item.path.replace(oldPath, newPath);
+      if (item.type === 'file') {
+        await this.renameFile(
+          owner,
+          repo,
+          item.path,
+          newItemPath,
+          message,
+          branch
+        );
+      } else if (item.type === 'dir') {
+        await this.renameDirectory(
+          owner,
+          repo,
+          item.path,
+          newItemPath,
+          message,
+          branch
+        );
+      }
+    }
+
+    return true;
   }
 
   /**

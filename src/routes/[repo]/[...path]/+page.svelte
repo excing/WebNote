@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ContentItem from "$lib/components/ContentItem.svelte";
   import CreateFileModal from "$lib/components/CreateFileModal.svelte";
   import FloatButton from "$lib/components/FloatButton.svelte";
   import Home from "$lib/components/Home.svelte";
@@ -7,12 +8,14 @@
   import MultiNavigation from "$lib/components/MultiNavigation.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
-  import { filesize } from "$lib/utils/format.js";
+  import { createGitHubRepoManager } from "$lib/utils/github.js";
 
   export let data;
 
   let isNewFile = false;
   $: prevPath = `/${data.repo}/${data.path.split("/").slice(0, -1).join("/")}`;
+
+  // const github = createGitHubRepoManager($githubAuth.accessToken || "");
 
   function toggleNewFileModal() {
     isNewFile = !isNewFile;
@@ -51,30 +54,25 @@
         </button>
       </div>
       {#if data.path}
-        <a href={prevPath} class="text-lg flex flex-row items-center">
-          <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
-          ..
-        </a>
+        <ContentItem
+          type="dir"
+          repo={data.repo}
+          path={data.path}
+          name=".."
+          size={0}
+          url={prevPath}
+          isMenuVisible={false}
+        />
       {/if}
       {#each contents as content}
-        {#if content.type === "dir"}
-          <a
-            href="/{data.repo}/{content.path}"
-            class="text-lg flex flex-row items-center"
-          >
-            <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
-            {content.name}
-          </a>
-        {:else}
-          <a
-            href="/{data.repo}/{content.path}/write"
-            class="text-lg flex flex-row items-center"
-          >
-            <div class="mr-2 h-5 w-5 ic-file ic-c-success"></div>
-            {content.name}
-            <span class="text-sm">({filesize(content.size)})</span>
-          </a>
-        {/if}
+        <ContentItem
+          type={content.type}
+          repo={data.repo}
+          path={content.path}
+          name={content.name}
+          size={content.size}
+          on:rename={() => {}}
+        />
       {/each}
     </section>
   </LoadContents>
@@ -87,25 +85,3 @@
     closeModal={toggleNewFileModal}
   ></CreateFileModal>
 </Home>
-
-<style>
-  .ic-c-primary {
-    filter: invert(26%) sepia(94%) saturate(3317%) hue-rotate(220deg)
-      brightness(99%) contrast(103%);
-  }
-
-  .ic-c-success {
-    filter: invert(51%) sepia(57%) saturate(372%) hue-rotate(101deg)
-      brightness(89%) contrast(95%);
-  }
-
-  /* .ic-c-error {
-    filter: invert(23%) sepia(90%) saturate(2346%) hue-rotate(3deg)
-      brightness(93%) contrast(108%);
-  }
-
-  .ic-c-white {
-    filter: invert(93%) sepia(100%) saturate(30%) hue-rotate(142deg)
-      brightness(107%) contrast(108%);
-  } */
-</style>

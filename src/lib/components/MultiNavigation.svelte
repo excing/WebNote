@@ -10,9 +10,7 @@
 <div class="flex flex-wrap gap-1">
   {#each routers as router}
     {#if !router.isLast}
-      <a href={router.url} class={router.isLast ? "" : "text-blue-500"}
-        >{router.name}</a
-      >
+      <a href={router.url}>{router.name}</a>
       <span>/</span>
     {:else}
       {router.name}

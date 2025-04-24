@@ -7,7 +7,7 @@
 
 {#if isOpen}
   <div
-    class="fixed inset-0 bg-gray-400/10 flex items-center justify-center p-4 z-50"
+    class="fixed inset-0 bg-white flex items-center justify-center p-4 z-50"
   >
     <div class="relative bg-white rounded-lg co-border-6 w-full max-w-md">
       <!-- 关闭按钮 -->

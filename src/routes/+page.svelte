@@ -7,8 +7,8 @@
   import { githubAuth } from "$lib/stores/githubAuth";
 </script>
 
-<Home class="max-w-[860px] mx-auto px-2 pt-8 space-y-10">
-  <Toolbar title="我的笔记"></Toolbar>
+<Home class="max-w-[860px] mx-auto px-2 space-y-10">
+  <Toolbar title="我的笔记" class="h-14 md:h-16"></Toolbar>
   {#if false}
     <section class=" space-y-5">
       <div class="flex justify-between">

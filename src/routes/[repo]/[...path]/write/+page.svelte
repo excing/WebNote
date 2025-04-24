@@ -32,7 +32,7 @@
         >
           <div slot="left">
             <span
-              class="ic-refresh w-5 h-5 block"
+              class="ic-refresh w-4 h-4 block"
               class:animate-spin={isUpdating}
             ></span>
           </div>

@@ -46,8 +46,8 @@
   }
 </script>
 
-<header class="flex justify-between items-center {$$props.class}">
-  <h1 class="text-xl font-bold flex items-center space-x-2">
+<header class="flex justify-between items-center space-x-2 {$$props.class}">
+  <h1 class="text-xl font-bold flex items-center space-x-1 min-w-0">
     <a href="/" class:hidden={!isHomeButtonVisible}>
       <img
         class="w-6 h-6"
@@ -63,12 +63,12 @@
     >
       <span class="w-9 h-9 ic-chevron-left block -mr-2" title="back"></span>
     </button>
-    <span class="hidden md:inline" class:hidden={!title}>{title}</span>
+    <span class="hidden md:inline truncate" class:hidden={!title}>{title}</span>
     <slot name="left" />
   </h1>
   <slot />
   {#if $githubAuth.user}
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4 shrink-0">
       <slot name="right" />
       {#if isUserButtonVisible}
         <UserDropdown

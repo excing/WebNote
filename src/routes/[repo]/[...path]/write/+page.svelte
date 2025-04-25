@@ -13,6 +13,16 @@
 
   let editer: Editor;
   let isUpdating = false;
+  let isReadOnly = true;
+
+  let hasUpdate = false;
+
+  $: buttonText = isReadOnly ? "编辑" : hasUpdate ? "同步" : "浏览";
+  function handleButton() {
+    if (isReadOnly) isReadOnly = false;
+    else if (hasUpdate) editer.saveContent();
+    else isReadOnly = true;
+  }
 
   function onEditorSyncError(err: string) {}
 </script>
@@ -40,16 +50,17 @@
             <button
               class="text-sm text-white rounded py-1 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
               disabled={isUpdating}
-              on:click={() => {
-                editer.saveContent();
-              }}>保存</button
-            >
+              on:click={handleButton}
+              >{buttonText}
+            </button>
           </div>
         </Toolbar>
       </header>
       <Editor
         bind:this={editer}
         bind:isUpdating
+        bind:readOnly={isReadOnly}
+        bind:hasUpdate
         class="w-full text-xl px-2 py-4 rounded disabled:border-none pt-15 focus:border-none focus:outline-none"
         token={$githubAuth.accessToken || ""}
         repo={data.repo}

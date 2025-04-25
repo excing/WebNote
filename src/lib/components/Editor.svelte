@@ -10,6 +10,9 @@
   export let owner = "";
   export let repo = "";
   export let path = "";
+  export let readOnly = true;
+  export let hasUpdate = false;
+  $: hasUpdate = updatingContent.trim() !== fileContent.trim();
 
   export let onError: (err: string) => void;
 
@@ -90,7 +93,7 @@
     if (isLoading) {
       return;
     }
-    if (updatingContent.trim() === fileContent.trim()) {
+    if (!hasUpdate) {
       return;
     }
     if (isUpdating) {
@@ -135,7 +138,7 @@
     style="overflow-y: hidden;"
     bind:value={fileContent}
     on:input={handleContentChange}
-    disabled={isLoading}
+    disabled={isLoading || readOnly}
     use:keyboardShortcut={{
       key: "s",
       meta: true,

@@ -68,7 +68,7 @@
     bind:readOnly={isReadOnly}
     bind:hasUpdate
     bind:fileContent
-    class="w-full min-h-screen text-xl rounded disabled:border-none focus:border-none focus:outline-none"
+    class="w-full min-h-[100dvh] text-xl rounded disabled:border-none focus:border-none focus:outline-none"
     token={$githubAuth.accessToken || ""}
     repo={data.repo}
     owner={$githubAuth.user.login}

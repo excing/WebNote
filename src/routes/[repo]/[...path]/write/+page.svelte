@@ -35,9 +35,9 @@
   function onEditorSyncError(err: string) {}
 </script>
 
-<Home class="flex flex-col min-h-screen">
+<Home class="flex flex-col space-y-4 px-2 md:px-0">
   <Toolbar
-    class="h-12 md:h-14 sticky top-0 bg-white"
+    class="h-12 md:h-14 sticky top-0 bg-white z-10"
     {path}
     isHomeButtonVisible={false}
     isBackButtonVisible={true}
@@ -61,14 +61,14 @@
       </button>
     </div>
   </Toolbar>
-  <h1 class="text-center py-4 text-xl font-bold md:hidden">{title}</h1>
+  <h1 class="text-center text-xl font-bold md:hidden">{title}</h1>
   <Editor
     bind:this={editer}
     bind:isUpdating
     bind:readOnly={isReadOnly}
     bind:hasUpdate
     bind:fileContent
-    class="w-full text-xl px-2 py-4 rounded disabled:border-none focus:border-none focus:outline-none"
+    class="w-full min-h-screen text-xl rounded disabled:border-none focus:border-none focus:outline-none"
     token={$githubAuth.accessToken || ""}
     repo={data.repo}
     owner={$githubAuth.user.login}

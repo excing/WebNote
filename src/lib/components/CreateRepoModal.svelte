@@ -1,6 +1,7 @@
 <script lang="ts">
   import { githubAuth } from "$lib/stores/githubAuth";
   import Modal from "./Modal.svelte";
+  import { toValidGitHubRepoName } from "$lib/utils/string";
 
   export let isOpen: boolean = false;
   export let closeModal: () => void;
@@ -20,6 +21,8 @@
     try {
       isLoading = true;
       error = null;
+
+      let githubRepoName = toValidGitHubRepoName(repoName);
 
       await githubAuth.createRepository($githubAuth.accessToken, {
         name: repoName,

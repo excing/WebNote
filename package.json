@@ -19,6 +19,7 @@
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/vite": "^4.0.0",
+		"@types/unidecode": "^1.1.0",
 		"eslint": "^9.18.0",
 		"eslint-plugin-svelte": "^3.0.0",
 		"globals": "^16.0.0",
@@ -31,6 +32,7 @@
 	},
 	"dependencies": {
 		"@types/marked": "^6.0.0",
-		"marked": "^15.0.8"
+		"marked": "^15.0.8",
+		"unidecode": "^1.1.0"
 	}
 }

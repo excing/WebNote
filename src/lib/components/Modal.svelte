@@ -1,14 +1,12 @@
 <script lang="ts">
-  import { clickOutside } from "$lib/utils/window";
+  import { clickOutside, keyboardShortcut } from "$lib/utils/window";
 
   export let isOpen: boolean = false;
   export let closeModal: () => void;
 </script>
 
 {#if isOpen}
-  <div
-    class="fixed inset-0 bg-white flex items-center justify-center p-4 z-50"
-  >
+  <div class="fixed inset-0 bg-white flex items-center justify-center p-4 z-50">
     <div class="relative bg-white rounded-lg co-border-6 w-full max-w-md">
       <!-- 关闭按钮 -->
       <button
@@ -30,7 +28,16 @@
         </svg>
       </button>
 
-      <div class={$$props.class} use:clickOutside={closeModal}>
+      <div
+        class={$$props.class}
+        use:clickOutside={closeModal}
+        use:keyboardShortcut={[
+          {
+            key: "Escape",
+            handle: closeModal,
+          },
+        ]}
+      >
         <slot />
       </div>
     </div>

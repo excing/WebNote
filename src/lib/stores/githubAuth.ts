@@ -45,15 +45,20 @@ function createGitHubAuthStore() {
   // Add methods for note 
   function addContent(repo: string, content: GitContent) {
     update(state => {
-      // Check if repo already exists
-      const exists = state.historyNotes.some(r => (r.repo === repo && r.content.path === content.path));
-      if (exists) return state;
+      const newNote = { repo: repo, content: content };
+      let historyNotes = [...state.historyNotes];
 
-      const historyNotes = [...state.historyNotes, { repo: repo, content: content }];
+      // 移除已存在的笔记 (如果存在)
+      historyNotes = historyNotes.filter(r => !(r.repo === repo && r.content.path === content.path));
+
+      // 将新笔记放在最前面
+      historyNotes = [newNote, ...historyNotes];
+
       localStorage.setItem('history_notes', JSON.stringify(historyNotes));
       return { ...state, historyNotes: historyNotes };
     });
   }
+
 
   // Add methods for note repositories
   function addNoteRepo(repo: any) {

@@ -30,6 +30,8 @@
         if (Array.isArray(content)) {
           // It's a directory, not a file
           contents = content;
+
+          sort("name");
         } else {
           // It's a file
           error = "Error: It's a file";
@@ -47,6 +49,38 @@
       .finally(() => {
         isLoading = false;
       });
+  }
+
+  function sort(
+    sort: "default" | "name" | "size" = "default",
+    direction: "asc" | "desc" = "asc",
+  ) {
+    // 如果是单个文件或未指定排序，直接返回
+    if (!Array.isArray(contents) || sort === "default") {
+      return contents;
+    }
+
+    // 排序逻辑
+    return contents.sort((a, b) => {
+      let compareResult = 0;
+
+      switch (sort) {
+        case "name":
+          // 目录排在前面
+          compareResult =
+            (a.type === "dir" ? 0 : 1) - (b.type === "dir" ? 0 : 1);
+          // 类型相同再按名称排序
+          if (compareResult === 0) {
+            compareResult = a.name.localeCompare(b.name);
+          }
+          break;
+        case "size":
+          compareResult = a.size - b.size;
+          break;
+      }
+
+      return direction === "asc" ? compareResult : -compareResult;
+    });
   }
 
   onMount(() => {});

@@ -17,7 +17,8 @@
 
   export let onError: (err: string) => void;
 
-  let fileContent = "";
+  export let fileContent = "";
+
   let lastSavedSha: string | null = null;
   let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -140,36 +141,35 @@
   });
 </script>
 
-<Loader {isLoading} class={$$props.class}>
-  <textarea
-    bind:this={textarea}
-    class={$$props.class}
-    style="overflow-y: hidden;"
-    bind:value={fileContent}
-    on:input={handleContentChange}
-    disabled={isLoading || readOnly}
-    use:autoFocus={!readOnly}
-    use:keyboardShortcut={[
-      {
-        key: "s",
-        meta: true,
-        stop: true,
-        handle: saveContent,
-      },
-      {
-        key: "s",
-        ctrl: true,
-        stop: true,
-        handle: saveContent,
-      },
-      {
-        key: "Escape",
-        handle: exitEditMode,
-      },
-      {
-        key: "i",
-        handle: enterWriteMode,
-      },
-    ]}
-  ></textarea>
-</Loader>
+<Loader {isLoading}></Loader>
+<textarea
+  bind:this={textarea}
+  class={$$props.class}
+  style="overflow-y: hidden;"
+  bind:value={fileContent}
+  on:input={handleContentChange}
+  disabled={isLoading || readOnly}
+  use:autoFocus={!readOnly}
+  use:keyboardShortcut={[
+    {
+      key: "s",
+      meta: true,
+      stop: true,
+      handle: saveContent,
+    },
+    {
+      key: "s",
+      ctrl: true,
+      stop: true,
+      handle: saveContent,
+    },
+    {
+      key: "Escape",
+      handle: exitEditMode,
+    },
+    {
+      key: "i",
+      handle: enterWriteMode,
+    },
+  ]}
+></textarea>

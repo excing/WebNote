@@ -24,3 +24,43 @@ export function toValidGitHubRepoName(input: string): string {
     // 5. 确保不为空（如果全部被移除，则返回 fallback）
     .trim() || 'repository';
 }
+
+export function segmentWord(
+  text: string,
+  lang: string = "en",
+  granularity: "grapheme" | "word" | "sentence" = "word",
+) {
+  // 创建一个 Intl.Segmenter 实例，指定语言和粒度（'word' 表示按词分隔）
+  const segmenter = new Intl.Segmenter(lang, { granularity });
+
+  // 使用 segmenter.segment 方法进行分词
+  let segments = segmenter.segment(text);
+
+  return Array.from(segments).map((item) => item.segment);
+}
+
+export function countWords(xstr: string, symbol?: boolean) {
+  // 匹配非 ASCII 字符的正则表达式
+  const nonAsciiRegex = /[^\x00-\x7F]+/g;
+
+  // 提取所有非 ASCII 字符（包括中文、日文等），去除标点符号
+  const nonAsciiMatches = xstr.match(nonAsciiRegex) || [];
+
+  // 统计纯粹的非 ASCII 字符
+  const nonAsciiText = nonAsciiMatches.join("");
+  const nonAsciiCount = symbol
+    ? nonAsciiText.length
+    : nonAsciiText.replace(/[^\p{L}\p{N}]/gu, "").length; // 只统计字母和数字，排除标点符号
+
+  // 获取 ASCII 字符串部分（去除非 ASCII 字符）
+  const asciiStr = xstr.replace(nonAsciiRegex, " ");
+
+  // 统计 ASCII 字符串的字数，按空白字符和标点符号分割
+  const asciiWordCount = asciiStr
+    .trim()
+    .split(/[\s\.,;!?(){}[\]"':-]+/)
+    .filter(Boolean).length;
+
+  // 总字数为 ASCII 字符串的字数 + 纯净的非 ASCII 字符的字数
+  return asciiWordCount + nonAsciiCount;
+}

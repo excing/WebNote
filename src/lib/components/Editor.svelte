@@ -5,6 +5,7 @@
   import Loader from "./Loader.svelte";
   import { decode64, encode64 } from "$lib/utils/encode";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { autoFocus } from "$lib/utils/actions/autoFocus";
 
   export let token = "";
   export let owner = "";
@@ -139,6 +140,7 @@
     bind:value={fileContent}
     on:input={handleContentChange}
     disabled={isLoading || readOnly}
+    use:autoFocus={!readOnly}
     use:keyboardShortcut={{
       key: "s",
       meta: true,

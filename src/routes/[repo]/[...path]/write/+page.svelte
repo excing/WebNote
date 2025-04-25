@@ -17,7 +17,8 @@
 
   let hasUpdate = false;
 
-  $: buttonText = isReadOnly ? "编辑" : hasUpdate ? "同步" : "浏览";
+  $: buttonText = isReadOnly ? "编辑模式" : hasUpdate ? "同步" : "浏览模式";
+  $: buttonColor = isReadOnly ? "blue" : hasUpdate ? "green" : "amber";
   function handleButton() {
     if (isReadOnly) isReadOnly = false;
     else if (hasUpdate) editer.saveContent();
@@ -48,7 +49,7 @@
           </div>
           <div slot="right">
             <button
-              class="text-sm text-white rounded py-1 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+              class="text-sm text-white rounded py-1 px-4 bg-{buttonColor}-600 hover:bg-{buttonColor}-700 disabled:opacity-50"
               disabled={isUpdating}
               on:click={handleButton}
               >{buttonText}

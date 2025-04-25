@@ -24,7 +24,7 @@
 
 <!-- 默认加载器 -->
 <Home class="min-h-screen flex flex-col space-y-8">
-  <Toolbar class="h-14 md:h-16">
+  <Toolbar class="h-12 md:h-14">
     <MultiNavigation slot="left" repo={data.repo} path={data.path} />
   </Toolbar>
   <LoadRepository

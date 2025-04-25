@@ -18,7 +18,12 @@
   let hasUpdate = false;
 
   $: buttonText = isReadOnly ? "编辑模式" : hasUpdate ? "同步" : "浏览模式";
-  $: buttonColor = isReadOnly ? "blue" : hasUpdate ? "green" : "amber";
+
+  $: buttonColor = isReadOnly
+    ? "bg-blue-600 hover:bg-blue-700"
+    : hasUpdate
+      ? "bg-green-600 hover:bg-green-700"
+      : "bg-amber-600 hover:bg-amber-700";
   function handleButton() {
     if (isReadOnly) isReadOnly = false;
     else if (hasUpdate) editer.saveContent();
@@ -32,9 +37,10 @@
   <div class="flex flex-row overflow-auto">
     <div class="flex-1 flex flex-col">
       <header
-        class="pr-3 py-3 fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50"
+        class="pr-3 fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50"
       >
         <Toolbar
+          class="h-12 md:h-14"
           {title}
           {path}
           isHomeButtonVisible={false}
@@ -49,7 +55,7 @@
           </div>
           <div slot="right">
             <button
-              class="text-sm text-white rounded py-1 px-4 bg-{buttonColor}-600 hover:bg-{buttonColor}-700 disabled:opacity-50"
+              class="text-sm text-white rounded py-1 px-4 {buttonColor} disabled:opacity-50"
               disabled={isUpdating}
               on:click={handleButton}
               >{buttonText}

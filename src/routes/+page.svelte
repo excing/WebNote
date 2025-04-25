@@ -6,20 +6,27 @@
   import RepositoryCard from "$lib/components/RepositoryCard.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
+
+  let showAllHistoryNotes = false;
 </script>
 
 <Home class="space-y-10">
-  <Toolbar title="我的笔记" class="h-14 md:h-16"></Toolbar>
+  <Toolbar title="我的笔记" class="h-12 md:h-14"></Toolbar>
   {#if $githubAuth.historyNotes.length != 0}
     <section class=" space-y-5">
       <div class="flex justify-between">
         <h2 class="text-xl font-semibold">
-          最近笔记<span class="text-sm text-gray-400">(按时间排序)</span>
+          最近笔记<button
+            class="text-sm text-gray-400 ml-2"
+            on:click={() => {
+              showAllHistoryNotes = !showAllHistoryNotes;
+            }}>{showAllHistoryNotes ? "收起" : "显示全部"}</button
+          >
         </h2>
       </div>
       <div class=" space-y-3">
         {#each $githubAuth.historyNotes as note, i}
-          {#if i < 3}
+          {#if showAllHistoryNotes || i < 3}
             <ContentItem
               isMenuVisible={false}
               type={note.content.type}

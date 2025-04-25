@@ -8,7 +8,7 @@
 </script>
 
 <div class="space-y-10">
-  <Toolbar class="h-14 md:h-16" title="仪表盘"></Toolbar>
+  <Toolbar class="h-12 md:h-14" title="仪表盘"></Toolbar>
 
   <main>
     <!-- Rest of your dashboard content remains the same -->

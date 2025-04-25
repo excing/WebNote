@@ -38,6 +38,7 @@
     <div class="flex-1 flex flex-col">
       <header
         class="pr-3 fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50"
+        use:scrollHideHeader={100}
       >
         <Toolbar
           class="h-12 md:h-14"

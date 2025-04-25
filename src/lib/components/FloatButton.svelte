@@ -1,15 +1,13 @@
 <script lang="ts">
-  export let onClick = () => {};
 </script>
 
-<button class="floating-button text-2xl" on:click={onClick}><slot /></button>
+<div class="sticky bottom-0 flex flex-row z-10">
+  <div class="flex-1"></div>
+  <button class="floating-button text-2xl m-5" on:click><slot /></button>
+</div>
 
 <style>
   .floating-button {
-    position: absolute;
-    bottom: calc(var(--spacing) * 5);
-    right: calc(var(--spacing) * 5);
-    z-index: 10;
     width: calc(var(--spacing) * 10);
     height: calc(var(--spacing) * 10);
     border-radius: 50%;

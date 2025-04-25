@@ -6,7 +6,7 @@
 
 <div class={$$props.class}>
   {#if isLoading}
-    <div class="flex {size} space-x-4 justify-center items-center py-2">
+    <div class="flex {size} space-x-4 justify-center items-center py-10">
       <div
         class="bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"
       ></div>

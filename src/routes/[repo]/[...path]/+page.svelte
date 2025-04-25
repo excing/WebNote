@@ -23,7 +23,7 @@
 </script>
 
 <!-- 默认加载器 -->
-<Home class="max-w-[860px] h-screen relative mx-auto px-2 space-y-8">
+<Home class="max-w-[860px] h-screen flex flex-col mx-auto px-2 space-y-8">
   <Toolbar class="h-14 md:h-16">
     <MultiNavigation slot="left" repo={data.repo} path={data.path} />
   </Toolbar>
@@ -99,7 +99,7 @@
     </section>
   </LoadContents>
 
-  <FloatButton onClick={toggleNewFileModal}>+</FloatButton>
+  <FloatButton on:click={toggleNewFileModal}>+</FloatButton>
   <CreateFileModal
     bind:isOpen={isNewFile}
     repo={data.repo}

@@ -34,41 +34,6 @@
   //   }
   // });
 
-  onMount(() => {
-    isLoading = true;
-
-    const github = createGitHubRepoManager(token);
-    github
-      .getContents(owner, repo, path)
-      .then((content: any) => {
-        if (Array.isArray(content)) {
-          // It's a directory, not a file
-          fileContent = "It's a directory, not a file";
-        } else {
-          // It's a file
-          fileContent = decode64(content.content);
-          lastSavedSha = content.sha;
-          updatingContent = fileContent;
-          isLoading = false;
-
-          githubAuth.addContent(repo, content);
-
-          setTimeout(() => {
-            adjustHeight();
-          }, 150);
-        }
-      })
-      .catch((error: any) => {
-        // File doesn't exist, create it
-        if (error.message.includes("404")) {
-          // 找不到文件
-          fileContent = error.message;
-        } else {
-          throw error;
-        }
-      });
-  });
-
   function adjustHeight() {
     if (textarea) {
       textarea.style.height = "auto"; // 先重置高度
@@ -130,6 +95,49 @@
         isUpdating = false;
       });
   }
+
+  function exitEditMode() {
+    readOnly = true;
+  }
+
+  function enterWriteMode() {
+    readOnly = false;
+  }
+
+  onMount(() => {
+    isLoading = true;
+
+    const github = createGitHubRepoManager(token);
+    github
+      .getContents(owner, repo, path)
+      .then((content: any) => {
+        if (Array.isArray(content)) {
+          // It's a directory, not a file
+          fileContent = "It's a directory, not a file";
+        } else {
+          // It's a file
+          fileContent = decode64(content.content);
+          lastSavedSha = content.sha;
+          updatingContent = fileContent;
+          isLoading = false;
+
+          githubAuth.addContent(repo, content);
+
+          setTimeout(() => {
+            adjustHeight();
+          }, 150);
+        }
+      })
+      .catch((error: any) => {
+        // File doesn't exist, create it
+        if (error.message.includes("404")) {
+          // 找不到文件
+          fileContent = error.message;
+        } else {
+          throw error;
+        }
+      });
+  });
 </script>
 
 <Loader {isLoading} class={$$props.class}>
@@ -141,11 +149,27 @@
     on:input={handleContentChange}
     disabled={isLoading || readOnly}
     use:autoFocus={!readOnly}
-    use:keyboardShortcut={{
-      key: "s",
-      meta: true,
-      ctrl: true,
-      handle: saveContent,
-    }}
+    use:keyboardShortcut={[
+      {
+        key: "s",
+        meta: true,
+        stop: true,
+        handle: saveContent,
+      },
+      {
+        key: "s",
+        ctrl: true,
+        stop: true,
+        handle: saveContent,
+      },
+      {
+        key: "Escape",
+        handle: exitEditMode,
+      },
+      {
+        key: "i",
+        handle: enterWriteMode,
+      },
+    ]}
   ></textarea>
 </Loader>

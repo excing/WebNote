@@ -28,7 +28,7 @@
   function onEditorSyncError(err: string) {}
 </script>
 
-<Home class="max-w-[860px] mx-auto px-2">
+<Home class="">
   <div class="flex flex-row overflow-auto">
     <div class="flex-1 flex flex-col">
       <header

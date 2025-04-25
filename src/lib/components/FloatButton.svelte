@@ -1,8 +1,7 @@
 <script lang="ts">
 </script>
 
-<div class="sticky bottom-0 flex flex-row z-10">
-  <div class="flex-1"></div>
+<div class="sticky bottom-0 flex flex-row justify-end z-10">
   <button class="floating-button text-2xl m-5" on:click><slot /></button>
 </div>
 

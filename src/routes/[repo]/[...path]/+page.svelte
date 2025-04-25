@@ -23,7 +23,7 @@
 </script>
 
 <!-- 默认加载器 -->
-<Home class="max-w-[860px] h-screen flex flex-col mx-auto px-2 space-y-8">
+<Home class="min-h-screen flex flex-col space-y-8">
   <Toolbar class="h-14 md:h-16">
     <MultiNavigation slot="left" repo={data.repo} path={data.path} />
   </Toolbar>
@@ -37,7 +37,7 @@
   </LoadRepository>
   <LoadContents
     bind:this={loadContentsEl}
-    class="space-y-2 w-full"
+    class="space-y-2 w-full flex-1"
     token={$githubAuth.accessToken || ""}
     bind:repo={data.repo}
     bind:path={data.path}

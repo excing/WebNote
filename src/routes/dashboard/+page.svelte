@@ -1,47 +1,35 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
-  import { createGitHubRepoManager } from "$lib/utils/github";
   import RepositoryCard from "$lib/components/RepositoryCard.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
   import { goto } from "$app/navigation";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
-
-  let user: any = null;
-  let repos: any[] = [];
-
-  onMount(async () => {
-    githubAuth.setLoading(true);
-
-    try {
-      const isAuth = await githubAuth.isAuthenticated();
-      if (!isAuth) return;
-
-      const accessToken = $githubAuth.accessToken || "";
-      const github = createGitHubRepoManager(accessToken);
-
-      user = await github.getCurrentUser();
-      repos = await github.listRepositories({ type: "all" });
-    } catch (err: any) {
-      githubAuth.setError(err.message || "加载数据时发生错误");
-    } finally {
-      githubAuth.setLoading(false);
-    }
-  });
-
-  onDestroy(() => {
-    console.log("destory dashboard");
-  });
-
-  function logout() {
-    githubAuth.clearAccessToken();
-  }
+  import LoadRepositories from "$lib/components/LoadRepositories.svelte";
 </script>
 
-<div class="max-w-[860px] mx-auto px-2 space-y-10">
+<div class="space-y-10">
   <Toolbar class="h-14 md:h-16" title="仪表盘"></Toolbar>
 
   <main>
+    <!-- Rest of your dashboard content remains the same -->
+    <section class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">
+          我的笔记仓库 ({$githubAuth.noteRepos.length})
+        </h2>
+        <CreateRepoButton
+          class="p-2 text-sm md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
+        />
+      </div>
+      {#if $githubAuth.noteRepos.length > 0}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {#each $githubAuth.noteRepos as repo}
+            <RepositoryCard repository={repo} />
+          {/each}
+        </div>
+      {/if}
+    </section>
+
     {#if $githubAuth.isLoading}
       <div class="flex flex-col items-center justify-center h-[300px]">
         <div
@@ -61,38 +49,24 @@
         </button>
       </div>
     {:else}
-      <!-- Rest of your dashboard content remains the same -->
-      <section class="mb-8">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold">
-            我的笔记仓库 ({$githubAuth.noteRepos.length})
-          </h2>
-          <CreateRepoButton
-            class="p-2 text-sm md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
-          />
-        </div>
-        {#if $githubAuth.noteRepos.length > 0}
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {#each $githubAuth.noteRepos as repo}
-              <RepositoryCard repository={repo} />
-            {/each}
-          </div>
-        {/if}
-      </section>
-
       <section>
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold">所有仓库 ({repos.length})</h2>
+          <h2 class="text-xl font-semibold">所有仓库</h2>
         </div>
-        {#if repos.length === 0}
-          <p class="text-center p-8 text-gray-500">没有找到仓库</p>
-        {:else}
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {#each repos as repo}
-              <RepositoryCard repository={repo} />
-            {/each}
-          </div>
-        {/if}
+        <LoadRepositories
+          token={$githubAuth.accessToken || ""}
+          let:repositories
+        >
+          {#if repositories.length === 0}
+            <p class="text-center p-8 text-gray-500">没有找到仓库</p>
+          {:else}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {#each repositories as repo}
+                <RepositoryCard repository={repo} />
+              {/each}
+            </div>
+          {/if}
+        </LoadRepositories>
       </section>
     {/if}
   </main>

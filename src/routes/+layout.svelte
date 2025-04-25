@@ -24,6 +24,6 @@
 	});
 </script>
 
-<Loader isLoading={loading}>
+<Loader isLoading={loading} class="max-w-[960px] m-auto px-2">
 	{@render children()}
 </Loader>

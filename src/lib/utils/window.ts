@@ -72,21 +72,26 @@ export function scrollHideHeader(node: HTMLElement, threshold = 100) {
 // src/lib/actions/keyboardShortcut.ts
 export function keyboardShortcut(
   node: HTMLElement,
-  shortcut: { key: string; ctrl?: boolean; meta?: boolean; shift?: boolean; alt?: boolean; handle: () => void }
+  shortcuts: { key: string; ctrl?: boolean; meta?: boolean; shift?: boolean; alt?: boolean; stop?: boolean; handle: () => void }[]
 ) {
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (
-      e.key === shortcut.key &&
-      ((shortcut.ctrl ? e.ctrlKey : false) ||
-        (shortcut.meta ? e.metaKey : false) ||
-        (shortcut.shift ? e.shiftKey : false) ||
-        (shortcut.alt ? e.altKey : false))
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      shortcut.handle();
-    }
+    shortcuts.forEach(shortcut => {
+      if (
+        e.key === shortcut.key &&
+        ((shortcut.ctrl ? e.ctrlKey : true) &&
+          (shortcut.meta ? e.metaKey : true) &&
+          (shortcut.shift ? e.shiftKey : true) &&
+          (shortcut.alt ? e.altKey : true))
+      ) {
+        if (shortcut.stop) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        shortcut.handle();
+        return;
+      }
+    });
   };
 
   window.addEventListener('keydown', handleKeyDown);

@@ -1,21 +1,29 @@
 <script lang="ts">
   import Editor from "$lib/components/Editor.svelte";
   import Home from "$lib/components/Home.svelte";
+  import Loader from "$lib/components/Loader.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { decode64 } from "$lib/utils/encode.js";
+  import { createGitHubRepoManager } from "$lib/utils/github.js";
   import { pathname } from "$lib/utils/path.js";
   import { countWords } from "$lib/utils/string";
+  import { onMount } from "svelte";
 
   export let data;
 
   let title = pathname(data.path);
   let path = `/${data.repo}/${data.path}`;
 
+  let isLoading = true;
+  let error: any;
+
   let editer: Editor;
   let isUpdating = false;
   let isReadOnly = true;
 
   let fileContent = "";
+  let lastSavedSha = "";
 
   let hasUpdate = false;
 
@@ -32,7 +40,37 @@
     else isReadOnly = true;
   }
 
-  function onEditorSyncError(err: string) {}
+  function onEditorSyncError(code: number, err: string) {}
+
+  onMount(() => {
+    isLoading = true;
+
+    const github = createGitHubRepoManager($githubAuth.accessToken || "");
+    github
+      .getContents($githubAuth.user.login, data.repo, data.path)
+      .then((content: any) => {
+        if (Array.isArray(content)) {
+          // It's a directory, not a file
+          fileContent = "It's a directory, not a file";
+        } else {
+          // It's a file
+          fileContent = decode64(content.content);
+          lastSavedSha = content.sha;
+          isLoading = false;
+
+          githubAuth.addContent(data.repo, content);
+        }
+      })
+      .catch((err: any) => {
+        if (err.status && err.status == 404) {
+          githubAuth.deleteContent(data.repo, path);
+        }
+        error = err;
+      })
+      .finally(() => {
+        isLoading = false;
+      });
+  });
 </script>
 
 <Home class="flex flex-col space-y-4 px-2 md:px-0">
@@ -61,20 +99,37 @@
       </button>
     </div>
   </Toolbar>
-  <h1 class="text-center text-xl font-bold md:hidden">{title}</h1>
-  <Editor
-    bind:this={editer}
-    bind:isUpdating
-    bind:readOnly={isReadOnly}
-    bind:hasUpdate
-    bind:fileContent
-    class="w-full min-h-[100dvh] text-xl rounded disabled:border-none focus:border-none focus:outline-none"
-    token={$githubAuth.accessToken || ""}
-    repo={data.repo}
-    owner={$githubAuth.user.login}
-    path={Array.isArray(data.path) ? data.path.join("/") : data.path}
-    onError={onEditorSyncError}
-  ></Editor>
+  <Loader {isLoading}>
+    {#if error}
+      {#if error.status == 404}
+        <div class="text-7xl text-gray-500">404</div>
+      {:else}
+        <p>网络异常({error.status || "-1"})</p>
+        <p>{error.message}</p>
+      {/if}
+      <a
+        href="/"
+        class="text-black border-b-1 border-b-black hover:scale-110 active:scale-110 transition-transform"
+        >返回首页
+      </a>
+    {:else}
+      <h1 class="text-center text-xl font-bold md:hidden">{title}</h1>
+      <Editor
+        bind:this={editer}
+        bind:isUpdating
+        bind:readOnly={isReadOnly}
+        bind:hasUpdate
+        bind:fileContent
+        bind:lastSavedSha
+        class="w-full min-h-[100dvh] text-xl rounded disabled:border-none focus:border-none focus:outline-none"
+        token={$githubAuth.accessToken || ""}
+        repo={data.repo}
+        owner={$githubAuth.user.login}
+        path={data.path}
+        onError={onEditorSyncError}
+      ></Editor>
+    {/if}
+  </Loader>
   <div
     class="sticky bottom-0 bg-gray-200 text-sm px-1 md:hidden"
     class:hidden={isReadOnly}

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import ContentItem from "$lib/components/ContentItem.svelte";
   import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
   import Home from "$lib/components/Home.svelte";
@@ -20,7 +19,7 @@
             class="text-sm text-gray-400 ml-2"
             on:click={() => {
               showAllHistoryNotes = !showAllHistoryNotes;
-            }}>{showAllHistoryNotes ? "收起" : "显示全部"}</button
+            }}>{showAllHistoryNotes ? "全部收起" : "显示全部"}</button
           >
         </h2>
       </div>

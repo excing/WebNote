@@ -2,10 +2,8 @@
   import { createGitHubRepoManager } from "$lib/utils/github";
   import { keyboardShortcut } from "$lib/utils/window";
   import { onMount } from "svelte";
-  import Loader from "./Loader.svelte";
-  import { decode64, encode64 } from "$lib/utils/encode";
-  import { githubAuth } from "$lib/stores/githubAuth";
   import { autoFocus } from "$lib/utils/actions/autoFocus";
+  import { encode64 } from "$lib/utils/encode";
 
   export let token = "";
   export let owner = "";
@@ -15,14 +13,12 @@
   export let hasUpdate = false;
   $: hasUpdate = updatingContent.trim() !== fileContent.trim();
 
-  export let onError: (err: string) => void;
+  export let onError: (code: number, err: string) => void;
 
   export let fileContent = "";
-
-  let lastSavedSha: string | null = null;
+  export let lastSavedSha: string | null = null;
   let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
-  let isLoading = true;
   export let isUpdating = false;
   let updatingContent = "";
 
@@ -52,9 +48,6 @@
   }
 
   export function saveContent() {
-    if (isLoading) {
-      return;
-    }
     if (!hasUpdate) {
       return;
     }
@@ -84,8 +77,12 @@
         lastSavedSha = result.content.sha;
         updatingContent = content;
       })
-      .catch((err) => {
-        onError(err.message || "保存内容时发生错误");
+      .catch((err: any) => {
+        if (err.state) {
+          onError(err.state, err.message || "保存内容时发生错误");
+        } else {
+          onError(0, err.message || "保存内容时发生错误");
+        }
       })
       .finally(() => {
         isUpdating = false;
@@ -100,43 +97,9 @@
     readOnly = false;
   }
 
-  onMount(() => {
-    isLoading = true;
-
-    const github = createGitHubRepoManager(token);
-    github
-      .getContents(owner, repo, path)
-      .then((content: any) => {
-        if (Array.isArray(content)) {
-          // It's a directory, not a file
-          fileContent = "It's a directory, not a file";
-        } else {
-          // It's a file
-          fileContent = decode64(content.content);
-          lastSavedSha = content.sha;
-          updatingContent = fileContent;
-          isLoading = false;
-
-          githubAuth.addContent(repo, content);
-
-          setTimeout(() => {
-            adjustHeight();
-          }, 150);
-        }
-      })
-      .catch((error: any) => {
-        // File doesn't exist, create it
-        if (error.message.includes("404")) {
-          // 找不到文件
-          fileContent = error.message;
-        } else {
-          throw error;
-        }
-      });
-  });
+  onMount(() => {});
 </script>
 
-<Loader {isLoading}></Loader>
 <div class={$$props.class}>
   <span bind:this={textspan} class={$$props.class}></span>
   <textarea
@@ -144,7 +107,7 @@
     style="overflow-y: hidden;"
     bind:value={fileContent}
     on:input={handleContentChange}
-    disabled={isLoading || readOnly}
+    disabled={readOnly}
     use:autoFocus={!readOnly}
     use:keyboardShortcut={[
       {

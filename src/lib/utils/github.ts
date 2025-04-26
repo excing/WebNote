@@ -100,7 +100,8 @@ export class GitHubRepoManager {
       if (!response.ok) {
         throw {
           status: response.status,
-          data: data
+          data: data,
+          message: `API请求失败: ${response.status} - ${JSON.stringify(data)}`
         };
       }
 
@@ -108,7 +109,7 @@ export class GitHubRepoManager {
     } catch (error: any) {
       // 重新抛出经过处理的错误
       if (error.status) {
-        throw new Error(`API请求失败: ${error.status} - ${JSON.stringify(error.data)}`);
+        throw error;
       }
       throw new Error(`请求失败: ${error.message || '未知错误'}`);
     }

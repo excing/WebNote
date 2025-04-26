@@ -59,6 +59,17 @@ function createGitHubAuthStore() {
     });
   }
 
+  // Add methods for note 
+  function deleteContent(repo: string, path: string) {
+    update(state => {
+      // 移除已存在的笔记 (如果存在)
+      let historyNotes = state.historyNotes.filter(r => !(r.repo === repo && r.content.path === path));
+
+      localStorage.setItem('history_notes', JSON.stringify(historyNotes));
+      return { ...state, historyNotes: historyNotes };
+    });
+  }
+
 
   // Add methods for note repositories
   function addNoteRepo(repo: any) {
@@ -162,6 +173,7 @@ function createGitHubAuthStore() {
     addNoteRepo,
     removeNoteRepo,
     addContent,
+    deleteContent,
     clearNoteRepos
   };
 }

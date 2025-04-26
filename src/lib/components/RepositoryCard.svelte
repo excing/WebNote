@@ -5,6 +5,7 @@
   import Dropdown from "./Dropdown.svelte";
   import CreateFileModal from "./CreateFileModal.svelte";
   import { parseRepositoryDescription } from "$lib/utils/github-utils";
+  import DeleteRepositoryModal from "./DeleteRepositoryModal.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -16,6 +17,8 @@
   let isRemove = false;
   // 是否创建新文件
   let isNewFile = false;
+  // 是否删除仓库
+  let isDeleteRepository = false;
 
   // Check if this repo is selected
   $: isSelected = $githubAuth.noteRepos.some((r) => r.id === repository.id);
@@ -34,6 +37,10 @@
 
   function toggleNewFileModal() {
     isNewFile = !isNewFile;
+  }
+
+  function toggleDeleteRepositoryModal() {
+    isDeleteRepository = !isDeleteRepository;
   }
 </script>
 
@@ -93,6 +100,17 @@
         </button>
       {/if}
       <button
+        class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+        class:hidden={!isSelected}
+        role="menuitem"
+        tabindex="-1"
+        data-close-dropdown
+        on:click|preventDefault={toggleDeleteRepositoryModal}
+      >
+        <span class="mr-3 ic-trash ic-c-error h-5 w-5"></span>
+        删除该仓库
+      </button>
+      <button
         on:click|preventDefault={toggleSelection}
         class={`rounded-b-lg px-4 py-2 text-sm transition-colors ${
           isSelected
@@ -120,3 +138,16 @@
   repo={repository.name}
   closeModal={toggleNewFileModal}
 ></CreateFileModal>
+<DeleteRepositoryModal
+  bind:isOpen={isDeleteRepository}
+  repo={repository}
+  closeModal={toggleDeleteRepositoryModal}
+  on:deleted
+></DeleteRepositoryModal>
+
+<style>
+  .ic-c-error {
+    filter: invert(23%) sepia(90%) saturate(2346%) hue-rotate(3deg)
+      brightness(93%) contrast(108%);
+  }
+</style>

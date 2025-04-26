@@ -5,6 +5,8 @@
   import Toolbar from "$lib/components/Toolbar.svelte";
   import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
   import LoadRepositories from "$lib/components/LoadRepositories.svelte";
+
+  let loadRepositories: LoadRepositories;
 </script>
 
 <div class="space-y-10">
@@ -54,6 +56,7 @@
           <h2 class="text-xl font-semibold">所有仓库</h2>
         </div>
         <LoadRepositories
+          bind:this={loadRepositories}
           token={$githubAuth.accessToken || ""}
           let:repositories
         >
@@ -62,7 +65,10 @@
           {:else}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {#each repositories as repo}
-                <RepositoryCard repository={repo} />
+                <RepositoryCard
+                  repository={repo}
+                  on:deleted={() => loadRepositories.reload()}
+                />
               {/each}
             </div>
           {/if}

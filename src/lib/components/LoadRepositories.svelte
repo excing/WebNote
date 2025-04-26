@@ -16,6 +16,12 @@
   let perPage = 30;
   let hasMore = true;
 
+  export function reload() {
+    page = 1;
+    repositories = [];
+    loadListRepositories();
+  }
+
   function loadListRepositories() {
     isLoading = true;
     const github = createGitHubRepoManager(token);

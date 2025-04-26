@@ -59,7 +59,7 @@ function createGitHubAuthStore() {
     });
   }
 
-  // Add methods for note 
+  // Delete methods for note 
   function deleteContent(repo: string, path: string) {
     update(state => {
       // 移除已存在的笔记 (如果存在)

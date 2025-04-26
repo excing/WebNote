@@ -22,14 +22,14 @@
       clientSecret,
       "/login/redirect",
       page.url.origin,
-      "repo",
+      "repo,delete_repo",
     );
   }
 </script>
 
 <!-- // src/routes/login/+page.svelte -->
 <div class="container">
-  <h1>我的笔记</h1>
+  <h1 class="text-2xl">我的笔记</h1>
   <p>使用您的GitHub账户登录以管理笔记</p>
 
   <button on:click={handleLogin} class="github-login">

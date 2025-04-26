@@ -16,10 +16,14 @@
 			return;
 		}
 
-		const accessToken = $githubAuth.accessToken || "";
-		const github = createGitHubRepoManager(accessToken);
-		const user = await github.getCurrentUser();
-		githubAuth.setUser(user);
+		try {
+			const accessToken = $githubAuth.accessToken || "";
+			const github = createGitHubRepoManager(accessToken);
+			const user = await github.getCurrentUser();
+			githubAuth.setUser(user);
+		} catch (err: any) {
+			githubAuth.setAccessToken("");
+		}
 		loading = false;
 	});
 </script>

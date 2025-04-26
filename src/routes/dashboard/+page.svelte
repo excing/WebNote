@@ -26,7 +26,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {#each $githubAuth.noteRepos as repo}
           <div class="flex flex-col">
-            <RepositoryCard repository={repo} />
+            <RepositoryCard repository={repo} isManagerVisible={true} />
           </div>
         {/each}
       </div>
@@ -67,6 +67,7 @@
               {#each repositories as repo}
                 <RepositoryCard
                   repository={repo}
+                  isManagerVisible={true}
                   on:deleted={() => loadRepositories.reload()}
                 />
               {/each}

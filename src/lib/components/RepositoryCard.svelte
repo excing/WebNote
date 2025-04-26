@@ -10,6 +10,7 @@
   const dispatch = createEventDispatcher();
 
   export let repository: GitRepository;
+  export let isManagerVisible = false;
 
   $: noteRepo = parseRepositoryDescription(repository);
 
@@ -138,6 +139,18 @@
   </p>
   <div class="text-sm">
     {new Date(repository.created_at).toLocaleString()}
+  </div>
+  <div class:hidden={!isManagerVisible} class="flex justify-end">
+    <button
+      on:click|preventDefault={toggleSelection}
+      class={`px-4 py-2 text-sm transition-colors rounded ${
+        isSelected
+          ? "bg-red-100 text-red-700 hover:bg-red-200"
+          : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+      }`}
+    >
+      {isSelected ? (isRemove ? "确认移除" : "移除") : "添加"}
+    </button>
   </div>
 </a>
 <CreateFileModal

@@ -13,7 +13,7 @@
   console.log(wordCount); // 输出：10
 </script>
 
-<form>
+<form class="mt-8 mx-2">
   <div class="mb-4">
     <label for="lang" class="block text-left text-sm font-medium mb-1"
       >语言</label
@@ -60,3 +60,4 @@
 
 <div>字数（不计标点符号）：{countWords(text)}</div>
 <div>字数：{countWords(text, true)}</div>
+<div>字符长度：{text.length}</div>

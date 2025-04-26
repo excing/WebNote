@@ -1,7 +1,6 @@
 <script lang="ts">
   import ContentItem from "$lib/components/ContentItem.svelte";
   import CreateFileModal from "$lib/components/CreateFileModal.svelte";
-  import DeleteFileModal from "$lib/components/DeleteFileModal.svelte";
   import FloatButton from "$lib/components/FloatButton.svelte";
   import Home from "$lib/components/Home.svelte";
   import LoadContents from "$lib/components/LoadContents.svelte";
@@ -9,13 +8,21 @@
   import MultiNavigation from "$lib/components/MultiNavigation.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { parseRepositoryDescription } from "$lib/utils/github-utils.js";
+  import type { GitRepository } from "$lib/utils/github.js";
+  import { parentPath } from "$lib/utils/path.js";
 
   export let data;
 
   let loadContentsEl: LoadContents;
 
   let isNewFile = false;
-  $: prevPath = `/${data.repo}/${data.path.split("/").slice(0, -1).join("/")}`;
+  $: prevPath = parentPath(`/${data.repo}/${data.path}`);
+
+  let repository: GitRepository;
+  $: noteRepository = repository
+    ? parseRepositoryDescription(repository)
+    : { name: data.repo, description: "" };
 
   function toggleNewFileModal() {
     isNewFile = !isNewFile;
@@ -25,15 +32,20 @@
 <!-- 默认加载器 -->
 <Home class="min-h-screen flex flex-col space-y-8">
   <Toolbar class="h-12 md:h-14">
-    <MultiNavigation slot="left" repo={data.repo} path={data.path} />
+    <MultiNavigation
+      slot="left"
+      name={noteRepository.name}
+      repo={data.repo}
+      path={data.path}
+    />
   </Toolbar>
   <LoadRepository
+    bind:repository
     token={$githubAuth.accessToken || ""}
     repo={data.repo}
     owner={$githubAuth.user.login}
-    let:repository
   >
-    <p>{repository.description}</p>
+    <p>{noteRepository.description}</p>
   </LoadRepository>
   <LoadContents
     bind:this={loadContentsEl}

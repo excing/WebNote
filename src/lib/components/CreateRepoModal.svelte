@@ -2,6 +2,7 @@
   import { githubAuth } from "$lib/stores/githubAuth";
   import Modal from "./Modal.svelte";
   import { toValidGitHubRepoName } from "$lib/utils/string";
+  import { stringifyRepositoryDescription } from "$lib/utils/github-utils";
 
   export let isOpen: boolean = false;
   export let closeModal: () => void;
@@ -11,6 +12,9 @@
   let isPrivate = false;
   let isLoading = false;
   let error: string | null = null;
+
+  const MaxDescLength = 150;
+  $: isExceed = MaxDescLength < repoDescription.length;
 
   async function handleSubmit() {
     if (!repoName.trim()) {
@@ -23,10 +27,14 @@
       error = null;
 
       let githubRepoName = toValidGitHubRepoName(repoName);
+      let githubRepoDesc = stringifyRepositoryDescription(
+        repoName,
+        repoDescription,
+      );
 
       await githubAuth.createRepository($githubAuth.accessToken, {
-        name: repoName,
-        description: repoDescription,
+        name: githubRepoName,
+        description: githubRepoDesc,
         private: isPrivate,
       });
 
@@ -69,8 +77,12 @@
     <div class="mb-4">
       <label
         for="repoDescription"
-        class="block text-left text-sm font-medium mb-1">描述</label
-      >
+        class="text-left text-sm font-medium mb-1 flex items-center justify-between"
+        >描述
+        <span class="font-light" class:text-red-600={isExceed}
+          >{repoDescription.length}/{MaxDescLength}</span
+        >
+      </label>
       <textarea
         id="repoDescription"
         bind:value={repoDescription}
@@ -103,7 +115,7 @@
       <button
         type="submit"
         class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-        disabled={isLoading || !repoName.trim()}
+        disabled={isLoading || !repoName.trim() || isExceed}
       >
         {isLoading ? "创建中..." : "创建仓库"}
       </button>

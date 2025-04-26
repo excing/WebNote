@@ -1,10 +1,11 @@
 <script lang="ts">
   import { processMultiLevelPath } from "$lib/utils/path";
 
+  export let name = "";
   export let repo = "";
   export let path = "";
 
-  $: routers = processMultiLevelPath(repo, path);
+  $: routers = processMultiLevelPath(repo, path, name);
 </script>
 
 <div class="flex flex-wrap gap-1">

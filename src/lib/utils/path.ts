@@ -1,6 +1,6 @@
 
 // 多级路径处理的函数，它会将仓库名称和文件路径分解为各级目录的路由信息
-export function processMultiLevelPath(repo: string, path: string) {
+export function processMultiLevelPath(repo: string, path: string, name: string) {
   const fullpath = `${repo}/${path}`
   // 处理空路径情况
   if (!fullpath) return [];
@@ -14,7 +14,7 @@ export function processMultiLevelPath(repo: string, path: string) {
     const currentPath = segments.slice(0, index + 1).join('/');
 
     return {
-      name: segment,
+      name: index == 0 ? name : segment,
       url: `/${currentPath}`,
       isLast
     };

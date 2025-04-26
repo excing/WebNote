@@ -4,10 +4,13 @@
   import { createEventDispatcher } from "svelte";
   import Dropdown from "./Dropdown.svelte";
   import CreateFileModal from "./CreateFileModal.svelte";
+  import { parseRepositoryDescription } from "$lib/utils/github-utils";
 
   const dispatch = createEventDispatcher();
 
   export let repository: GitRepository;
+
+  let noteRepo = parseRepositoryDescription(repository);
 
   // 是否确认移除
   let isRemove = false;
@@ -41,7 +44,7 @@
   <!-- Selection indicator -->
   <div class="flex justify-between">
     <h3 class="text-xl font-medium mb-2">
-      {repository.name}
+      {noteRepo.name}
       {#if repository.private}
         <span class="bg-blue-50 text-base text-blue-700 px-2 py-1 rounded">
           私有
@@ -106,7 +109,7 @@
   </div>
 
   <p class="text-gray-600 mb-4 min-h-[3rem]">
-    {repository.description || "无描述"}
+    {noteRepo.description || "无描述"}
   </p>
   <div class="text-sm">
     {new Date(repository.created_at).toLocaleString()}

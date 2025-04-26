@@ -57,11 +57,12 @@
       />
     </a>
     <button
+      class="-ml-3 -mr-2"
       on:click={handleBack}
       aria-label="back"
       class:hidden={!isBackButtonVisible}
     >
-      <span class="w-9 h-9 ic-chevron-left block -mr-2" title="back"></span>
+      <span class="w-9 h-9 ic-chevron-left block" title="back"></span>
     </button>
     <span class="hidden md:inline truncate" class:hidden={!title}>{title}</span>
     <slot name="left" />

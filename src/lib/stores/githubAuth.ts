@@ -123,10 +123,11 @@ function createGitHubAuthStore() {
   // Add this method to the return object in createGitHubAuthStore()
   async function createRepository(accessToken: string | null, options: {
     name: string;
-    description?: string;
+    description?: string; // max 350 chats
     private?: boolean;
   }): Promise<any> {
     setLoading(true);
+    setError("");
     try {
       if (!accessToken) throw new Error('Not authenticated');
 

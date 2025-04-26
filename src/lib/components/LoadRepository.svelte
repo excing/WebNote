@@ -11,7 +11,7 @@
   export let owner = "";
   export let repo = "";
 
-  let repository: GitRepository;
+  export let repository: GitRepository;
 
   let isLoading = true;
   let err = "";

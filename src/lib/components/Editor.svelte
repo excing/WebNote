@@ -20,7 +20,7 @@
   let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
   export let isUpdating = false;
-  let updatingContent = "";
+  let updatingContent = fileContent;
 
   let textspan: HTMLElement;
 

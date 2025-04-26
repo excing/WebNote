@@ -11,7 +11,7 @@
 
   export let repository: GitRepository;
 
-  let noteRepo = parseRepositoryDescription(repository);
+  $: noteRepo = parseRepositoryDescription(repository);
 
   // 是否确认移除
   let isRemove = false;
@@ -22,6 +22,8 @@
 
   // Check if this repo is selected
   $: isSelected = $githubAuth.noteRepos.some((r) => r.id === repository.id);
+  $: isDefaultRepository =
+    $githubAuth.defaultRepo && $githubAuth.defaultRepo.id === repository.id;
 
   function toggleSelection() {
     if (isSelected) {
@@ -52,6 +54,11 @@
   <div class="flex justify-between">
     <h3 class="text-xl font-medium mb-2">
       {noteRepo.name}
+      {#if isDefaultRepository}
+        <span class="bg-amber-50 text-base text-amber-700 px-2 py-1 rounded">
+          默认
+        </span>
+      {/if}
       {#if repository.private}
         <span class="bg-blue-50 text-base text-blue-700 px-2 py-1 rounded">
           私有
@@ -64,17 +71,6 @@
         isRemove = false;
       }}
     >
-      <a
-        href={repository.html_url}
-        target="_blank"
-        class="rounded-t-lg flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-        role="menuitem"
-        tabindex="-1"
-        data-close-dropdown
-      >
-        <span class="mr-3 ic-github h-5 w-5"></span>
-        查看 GitHub
-      </a>
       <button
         class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
         class:hidden={!isSelected}
@@ -86,19 +82,30 @@
         <span class="mr-3 ic-file h-5 w-5"></span>
         新文件
       </button>
-      {#if false}
-        <button
-          class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-          class:hidden={!isSelected}
-          role="menuitem"
-          tabindex="-1"
-          data-close-dropdown
-          on:click|preventDefault={() => {}}
-        >
-          <span class="mr-3 ic-flag h-5 w-5"></span>
-          设为默认仓库
-        </button>
-      {/if}
+      <button
+        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        class:hidden={!isSelected}
+        role="menuitem"
+        tabindex="-1"
+        data-close-dropdown
+        on:click|preventDefault={() => {
+          githubAuth.setDefaultRepo(repository);
+        }}
+      >
+        <span class="mr-3 ic-flag h-5 w-5"></span>
+        设为默认仓库
+      </button>
+      <a
+        href={repository.html_url}
+        target="_blank"
+        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        role="menuitem"
+        tabindex="-1"
+        data-close-dropdown
+      >
+        <span class="mr-3 ic-github h-5 w-5"></span>
+        查看 GitHub
+      </a>
       <button
         class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
         class:hidden={!isSelected}
@@ -112,7 +119,7 @@
       </button>
       <button
         on:click|preventDefault={toggleSelection}
-        class={`rounded-b-lg px-4 py-2 text-sm transition-colors ${
+        class={`px-4 py-2 text-sm transition-colors ${
           isSelected
             ? "bg-red-100 text-red-700 hover:bg-red-200"
             : "bg-blue-100 text-blue-700 hover:bg-blue-200"
@@ -121,7 +128,7 @@
         tabindex="-1"
         data-close-dropdown={isRemove || !isSelected}
       >
-        {isSelected ? (isRemove ? "确认移除" : "移除") : "添加为笔记"}
+        {isSelected ? (isRemove ? "确认移除" : "移除") : "添加为笔记仓库"}
       </button>
     </Dropdown>
   </div>

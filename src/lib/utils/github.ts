@@ -173,7 +173,7 @@ export class GitHubRepoManager {
     gitignore_template?: string;
     license_template?: string;
   }) {
-    return this.request('/user/repos', {
+    return this.request<GitRepository>('/user/repos', {
       method: 'POST',
       body: options
     });

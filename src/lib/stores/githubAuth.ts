@@ -7,7 +7,8 @@ interface GitHubAuthState {
   accessToken: string | null;
   isLoading: boolean;
   error: string | null;
-  noteRepos: any[]; // Add note repositories to the state
+  noteRepos: GitRepository[]; // Add note repositories to the state
+  defaultRepo: GitRepository | null;
   user: any;
   historyNotes: {
     repo: string,
@@ -20,6 +21,7 @@ const initialState: GitHubAuthState = {
   isLoading: false,
   error: null,
   noteRepos: [], // Initialize empty array
+  defaultRepo: null,
   user: null,
   historyNotes: [],
 };
@@ -32,11 +34,13 @@ function createGitHubAuthStore() {
     update(state => {
       const token = localStorage.getItem('github_access_token');
       const savedNoteRepos = localStorage.getItem('github_note_repos');
+      const savedDefaultRepo = localStorage.getItem('github_default_repo');
       const savedHistoryNotes = localStorage.getItem('history_notes');
       return {
         ...state,
         accessToken: token,
         noteRepos: savedNoteRepos ? JSON.parse(savedNoteRepos) : [],
+        defaultRepo: savedDefaultRepo ? JSON.parse(savedDefaultRepo) : null,
         historyNotes: savedHistoryNotes ? JSON.parse(savedHistoryNotes) : []
       };
     });
@@ -70,25 +74,49 @@ function createGitHubAuthStore() {
     });
   }
 
-
   // Add methods for note repositories
-  function addNoteRepo(repo: any) {
+  function addNoteRepo(repo: GitRepository) {
     update(state => {
+      let defaultRepo = state.defaultRepo || repo;
       // Check if repo already exists
-      const exists = state.noteRepos.some(r => r.id === repo.id);
-      if (exists) return state;
+      let newNoteRepos = state.noteRepos.filter(r => r.id !== repo.id);
 
-      const newNoteRepos = [...state.noteRepos, repo];
+      newNoteRepos = [repo, ...newNoteRepos];
+
+      newNoteRepos = newNoteRepos.filter(r => r.id !== defaultRepo.id);
+      newNoteRepos = [defaultRepo, ...newNoteRepos];
+
+      localStorage.setItem('github_default_repo', JSON.stringify(defaultRepo));
       localStorage.setItem('github_note_repos', JSON.stringify(newNoteRepos));
-      return { ...state, noteRepos: newNoteRepos };
+      return { ...state, defaultRepo, noteRepos: newNoteRepos };
     });
   }
 
   function removeNoteRepo(repoId: number) {
     update(state => {
-      const newNoteRepos = state.noteRepos.filter(r => r.id !== repoId);
+      let defaultRepo = (state.defaultRepo && state.defaultRepo.id === repoId) ? null : state.defaultRepo;
+      let newNoteRepos = state.noteRepos.filter(r => r.id !== repoId);
+
+      if (1 <= newNoteRepos.length) defaultRepo = newNoteRepos[0];
+
+      localStorage.setItem('github_default_repo', JSON.stringify(defaultRepo));
       localStorage.setItem('github_note_repos', JSON.stringify(newNoteRepos));
-      return { ...state, noteRepos: newNoteRepos };
+      return { ...state, defaultRepo, noteRepos: newNoteRepos };
+    });
+  }
+
+  function setDefaultRepo(repo: GitRepository | null) {
+    update(state => {
+      let newNoteRepos = [...state.noteRepos];
+      if (repo) {
+        newNoteRepos = newNoteRepos.filter(r => r.id !== repo.id);
+        newNoteRepos = [repo, ...newNoteRepos];
+        localStorage.setItem('github_default_repo', JSON.stringify(repo));
+        localStorage.setItem('github_note_repos', JSON.stringify(newNoteRepos));
+      } else {
+        localStorage.removeItem('github_default_repo');
+      }
+      return { ...state, defaultRepo: repo, noteRepos: newNoteRepos };
     });
   }
 
@@ -174,6 +202,7 @@ function createGitHubAuthStore() {
     removeNoteRepo,
     addContent,
     deleteContent,
+    setDefaultRepo,
     clearNoteRepos
   };
 }

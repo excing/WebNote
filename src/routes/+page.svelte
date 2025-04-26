@@ -45,18 +45,18 @@
     <div class="text-center p-8">
       <h2 class="text-xl font-bold mb-4">选择一个笔记仓库</h2>
       <p class="mb-4">您还没有添加任何笔记仓库</p>
-      <div class="flex flex-wrap items-end justify-center">
+      <div class="flex justify-center">
         <CreateRepoButton
           responsive={false}
-          class="m-2 px-12 py-1 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
+          class="m-2 px-12 py-8 text-center bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
         />
-        <a
-          href="/dashboard"
-          class="m-2 text-sm text-gray-400 hover:text-gray-800"
-        >
-          去仪表盘添加仓库
-        </a>
       </div>
+      <a
+        href="/dashboard"
+        class="m-2 text-sm text-gray-400 hover:text-gray-800"
+      >
+        去仪表盘添加仓库
+      </a>
     </div>
   {:else}
     <section class="">

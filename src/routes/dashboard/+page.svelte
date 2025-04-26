@@ -23,13 +23,13 @@
           class="p-2 text-sm md:px-4 md:py-2 bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
         />
       </div>
-      {#if $githubAuth.noteRepos.length > 0}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {#each $githubAuth.noteRepos as repo}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {#each $githubAuth.noteRepos as repo}
+          <div class="flex flex-col">
             <RepositoryCard repository={repo} />
-          {/each}
-        </div>
-      {/if}
+          </div>
+        {/each}
+      </div>
     </section>
 
     {#if $githubAuth.isLoading}

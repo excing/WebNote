@@ -63,7 +63,7 @@
       })
       .catch((err: any) => {
         if (err.status && err.status == 404) {
-          githubAuth.deleteContent(data.repo, path);
+          githubAuth.deleteContent(data.repo, data.path);
         }
         error = err;
       })

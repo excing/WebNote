@@ -9,6 +9,10 @@ export function stringifyRepositoryDescription(name: string, description: string
 
 export function parseRepositoryDescription(repository: GitRepository) {
   try {
+    if (!repository) return {
+      name: "",
+      description: "",
+    }
     const noteRepo = JSON.parse(repository.description || "");
     const repoName = noteRepo ? (noteRepo.name || repository.name) : repository.name;
     const repoDesc = noteRepo ? (noteRepo.desc || repository.description) : repository.description;

@@ -1,12 +1,25 @@
 <script lang="ts">
   import ContentItem from "$lib/components/ContentItem.svelte";
+  import CreateFileModal from "$lib/components/CreateFileModal.svelte";
   import CreateRepoButton from "$lib/components/CreateRepoButton.svelte";
+  import CreateRepoModal from "$lib/components/CreateRepoModal.svelte";
+  import Dropdown from "$lib/components/Dropdown.svelte";
   import Home from "$lib/components/Home.svelte";
   import RepositoryCard from "$lib/components/RepositoryCard.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
 
   let showAllHistoryNotes = false;
+  let showNewFileModal = false;
+  let showNewRepositoryModal = false;
+
+  function toggleNewFileModal() {
+    showNewFileModal = !showNewFileModal;
+  }
+
+  function toggleNewRepositoryModal() {
+    showNewRepositoryModal = !showNewRepositoryModal;
+  }
 </script>
 
 <Home class="space-y-10">
@@ -48,7 +61,7 @@
       <div class="flex justify-center">
         <CreateRepoButton
           responsive={false}
-          class="m-2 px-12 py-8 text-center bg-green-600 text-white rounded-full md:rounded hover:bg-green-700"
+          class="m-2 px-12 py-8 text-center bg-green-600 text-white rounded hover:bg-green-700"
         />
       </div>
       <a
@@ -64,12 +77,43 @@
         <h2 class="text-xl font-semibold">
           我的笔记仓库 ({$githubAuth.noteRepos.length})
         </h2>
-        <a
-          href="/dashboard"
-          class="text-sm px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-          添加仓库
-        </a>
+        <Dropdown>
+          <span
+            slot="icon"
+            class="px-4 text-2xl text-white bg-green-600 rounded-full transition-transform duration-300 hover:bg-green-700 hover:scale-110"
+            >+</span
+          >
+          <div class="flex flex-col w-48">
+            <button
+              class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              role="menuitem"
+              tabindex="-1"
+              data-close-dropdown
+              on:click|preventDefault={toggleNewFileModal}
+            >
+              新笔记
+            </button>
+            <button
+              class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              role="menuitem"
+              tabindex="-1"
+              data-close-dropdown
+              on:click|preventDefault={toggleNewRepositoryModal}
+            >
+              新建笔记仓库
+            </button>
+            <a
+              href="/dashboard"
+              target="_blank"
+              class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              role="menuitem"
+              tabindex="-1"
+              data-close-dropdown
+            >
+              去仪表盘添加仓库
+            </a>
+          </div>
+        </Dropdown>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {#each $githubAuth.noteRepos as repository}
@@ -77,5 +121,14 @@
         {/each}
       </div>
     </section>
+    <CreateFileModal
+      bind:isOpen={showNewFileModal}
+      repo={$githubAuth.defaultRepo}
+      closeModal={toggleNewFileModal}
+    />
+    <CreateRepoModal
+      isOpen={showNewRepositoryModal}
+      closeModal={toggleNewRepositoryModal}
+    />
   {/if}
 </Home>

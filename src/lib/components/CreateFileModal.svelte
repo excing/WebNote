@@ -2,11 +2,17 @@
   import { goto } from "$app/navigation";
   import { githubAuth } from "$lib/stores/githubAuth";
   import { encode64 } from "$lib/utils/encode";
-  import { createGitHubRepoManager } from "$lib/utils/github";
+  import {
+    createGitHubRepoManager,
+    type GitRepository,
+  } from "$lib/utils/github";
+  import { parseRepositoryDescription } from "$lib/utils/github-utils";
   import Modal from "./Modal.svelte";
 
-  export let repo = "";
+  export let repo: GitRepository | null;
   export let path = "";
+
+  $: repoName = repo ? parseRepositoryDescription(repo).name : "";
 
   export let isOpen: boolean = false;
   export let closeModal: () => void;
@@ -37,14 +43,14 @@
     github
       .createOrUpdateFile(
         $githubAuth.user.login,
-        repo,
+        repoName,
         filepath,
         "Create notes",
         encode64(fileContent),
         "",
       )
       .then((result: any) => {
-        goto(`/${repo}/${filepath}/write`);
+        goto(`/${repo?.name}/${filepath}/write`);
         fileName = "";
         fileContent = "";
         closeModal();
@@ -60,6 +66,7 @@
 
 <Modal class="p-6" bind:isOpen {closeModal}>
   <h2 class="text-2xl font-bold mb-4">创建新笔记</h2>
+  <h3>笔记仓库：{repoName}</h3>
   <div class="mb-4 p-3 bg-red-100 text-red-700 rounded {error ? '' : 'hidden'}">
     {error}
   </div>

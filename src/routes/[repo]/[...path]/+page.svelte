@@ -63,7 +63,7 @@
           class="text-sm px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
           on:click={toggleNewFileModal}
         >
-          新建文件
+          新建笔记
         </button>
       </div>
 
@@ -114,7 +114,7 @@
   <FloatButton on:click={toggleNewFileModal}>+</FloatButton>
   <CreateFileModal
     bind:isOpen={isNewFile}
-    repo={data.repo}
+    repo={repository}
     path={data.path}
     closeModal={toggleNewFileModal}
   ></CreateFileModal>

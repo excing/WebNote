@@ -12,8 +12,6 @@
   export let isUserButtonVisible = true;
 
   function handleBack() {
-    console.log("history.length", history.length);
-
     if (2 < history.length) {
       history.back();
     } else {

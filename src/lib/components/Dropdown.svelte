@@ -38,7 +38,7 @@
   <!-- 用户头像按钮 -->
   <button
     type="button"
-    class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    class="flex items-center rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
     id="user-menu-button"
     aria-expanded={isOpen}
     aria-haspopup="true"
@@ -47,11 +47,17 @@
     {#if alt}
       <span class="sr-only">{title}</span>
     {/if}
-    {#if img}
-      <img class="h-{size} w-{size} rounded-full bg-gray-200" src={img} {alt} />
-    {:else}
-      <span class="{icon} w-{size} h-{size} m-1"></span>
-    {/if}
+    <slot name="icon">
+      {#if img}
+        <img
+          class="h-{size} w-{size} rounded-full bg-gray-200"
+          src={img}
+          {alt}
+        />
+      {:else}
+        <span class="{icon} w-{size} h-{size} m-1"></span>
+      {/if}
+    </slot>
   </button>
 
   <!-- 下拉菜单 -->

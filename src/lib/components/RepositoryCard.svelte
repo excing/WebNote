@@ -81,7 +81,7 @@
         on:click|preventDefault={toggleNewFileModal}
       >
         <span class="mr-3 ic-file h-5 w-5"></span>
-        新文件
+        新笔记
       </button>
       <button
         class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -155,7 +155,7 @@
 </a>
 <CreateFileModal
   bind:isOpen={isNewFile}
-  repo={repository.name}
+  repo={repository}
   closeModal={toggleNewFileModal}
 ></CreateFileModal>
 <DeleteRepositoryModal

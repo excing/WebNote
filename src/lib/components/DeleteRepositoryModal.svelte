@@ -28,6 +28,7 @@
       .deleteRepository($githubAuth.user.login, repo.name)
       .then((result: any) => {
         githubAuth.removeNoteRepo(repo.id);
+        closeModal();
         dispatch("deleted");
       })
       .catch((err: any) => {

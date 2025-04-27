@@ -74,7 +74,7 @@
   <form on:submit|preventDefault={handleSubmit}>
     <div class="mb-4">
       <label for="fileName" class="block text-left text-sm font-medium mb-1"
-        >文件名称 *</label
+        >笔记名称 *</label
       >
       <input
         id="fileName"

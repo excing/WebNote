@@ -50,6 +50,14 @@
             />
           {/if}
         {/each}
+        {#if showAllHistoryNotes}
+          <button
+            class=" bg-gray-50 text-gray-600 px-2 py-1 text-sm rounded hover:bg-gray-100 hover:text-gray-700"
+            on:click={() => {
+              githubAuth.cleanHistory();
+            }}>全部清除</button
+          >
+        {/if}
       </div>
     </section>
   {/if}

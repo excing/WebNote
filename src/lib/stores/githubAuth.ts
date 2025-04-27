@@ -74,6 +74,14 @@ function createGitHubAuthStore() {
     });
   }
 
+  // clean methods for note hisotry
+  function cleanHistory() {
+    update(state => {
+      localStorage.removeItem("history_notes");
+      return { ...state, historyNotes: [] };
+    });
+  }
+
   // Add methods for note repositories
   function addNoteRepo(repo: GitRepository) {
     update(state => {
@@ -202,6 +210,7 @@ function createGitHubAuthStore() {
     removeNoteRepo,
     addContent,
     deleteContent,
+    cleanHistory,
     setDefaultRepo,
     clearNoteRepos
   };

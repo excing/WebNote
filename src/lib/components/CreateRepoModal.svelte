@@ -9,7 +9,7 @@
 
   let repoName = "";
   let repoDescription = "";
-  let isPrivate = false;
+  let isPrivate = true;
   let isLoading = false;
   let error: string | null = null;
 
@@ -41,7 +41,7 @@
       closeModal();
       repoName = "";
       repoDescription = "";
-      isPrivate = false;
+      isPrivate = true;
     } catch (err: any) {
       error = err.message;
     } finally {
@@ -93,14 +93,18 @@
     </div>
 
     <div class="mb-6 flex items-center">
-      <input
+      <label
         id="isPrivate"
-        type="checkbox"
-        autocomplete="off"
-        bind:checked={isPrivate}
-        class="mr-2"
-      />
-      <label for="isPrivate" class="text-sm">私有仓库</label>
+        class="relative inline-flex items-center cursor-pointer"
+      >
+        <input type="checkbox" bind:checked={isPrivate} class="sr-only peer" />
+        <div
+          class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-transform"
+        ></div>
+        <span class="ml-3 text-base font-medium text-gray-900 dark:text-gray-300">
+          私有
+        </span>
+      </label>
     </div>
 
     <div class="flex justify-end gap-3">

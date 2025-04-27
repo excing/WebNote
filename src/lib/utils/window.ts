@@ -69,10 +69,14 @@ export function scrollHideHeader(node: HTMLElement, threshold = 100) {
   };
 }
 
+export interface KeyboardShortcut {
+  key: string; ctrl?: boolean; meta?: boolean; shift?: boolean; alt?: boolean; stop?: boolean; handle: () => void
+}
+
 // src/lib/actions/keyboardShortcut.ts
 export function keyboardShortcut(
   node: HTMLElement,
-  shortcuts: { key: string; ctrl?: boolean; meta?: boolean; shift?: boolean; alt?: boolean; stop?: boolean; handle: () => void }[]
+  shortcuts: KeyboardShortcut[]
 ) {
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -99,6 +103,28 @@ export function keyboardShortcut(
   return {
     destroy() {
       window.removeEventListener('keydown', handleKeyDown);
+    }
+  };
+}
+
+export function keyboardVisible(node: HTMLElement, handle: (height: number, isKeyboardVisible: boolean) => void) {
+  let timeer: number;
+  function update() {
+    const visualViewport = window.visualViewport;
+    if (visualViewport && 0 < visualViewport.height) {
+      clearInterval(timeer);
+      timeer = setTimeout(() => {
+        handle(visualViewport.height, 200 < Math.abs(window.innerHeight - visualViewport.height));
+      }, 100);
+    }
+  }
+
+  update();
+  window.addEventListener("resize", update);
+
+  return {
+    destroy() {
+      return () => window.removeEventListener("resize", update);
     }
   };
 }

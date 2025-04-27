@@ -3,10 +3,11 @@
   import Login from "./Login.svelte";
 </script>
 
-{#if $githubAuth.accessToken}
-  <div class={$$props.class}>
+<div class={$$props.class}>
+  {#if $githubAuth.accessToken}
     <slot />
-  </div>
-{:else}
-  <Login />
-{/if}
+  {:else}
+    <Login />
+  {/if}
+  <slot name="unlogin" />
+</div>

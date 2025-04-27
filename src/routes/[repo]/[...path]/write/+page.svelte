@@ -99,7 +99,7 @@
       </button>
     </div>
   </Toolbar>
-  <Loader {isLoading}>
+  <Loader {isLoading} class=" space-y-4">
     {#if error}
       {#if error.status == 404}
         <div class="text-7xl text-gray-500">404</div>
@@ -130,10 +130,4 @@
       ></Editor>
     {/if}
   </Loader>
-  <div
-    class="sticky bottom-0 bg-gray-200 text-sm px-1 md:hidden"
-    class:hidden={isReadOnly}
-  >
-    <span>,</span>
-  </div>
 </Home>

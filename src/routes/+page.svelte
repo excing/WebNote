@@ -22,7 +22,7 @@
   }
 </script>
 
-<Home class="space-y-10">
+<Home class="space-y-10 flex flex-col min-h-screen">
   <Toolbar title="我的笔记" class="h-12 md:h-14"></Toolbar>
   {#if $githubAuth.historyNotes.length != 0}
     <section class=" space-y-5">
@@ -55,7 +55,7 @@
   {/if}
 
   {#if $githubAuth.noteRepos.length == 0}
-    <div class="text-center p-8">
+    <div class="flex-1 text-center p-8">
       <h2 class="text-xl font-bold mb-4">选择一个笔记仓库</h2>
       <p class="mb-4">您还没有添加任何笔记仓库</p>
       <div class="flex justify-center">
@@ -72,7 +72,7 @@
       </a>
     </div>
   {:else}
-    <section class="">
+    <section class="flex-1">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">
           我的笔记仓库 ({$githubAuth.noteRepos.length})
@@ -104,7 +104,6 @@
             </button>
             <a
               href="/dashboard"
-              target="_blank"
               class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
               role="menuitem"
               tabindex="-1"
@@ -131,4 +130,7 @@
       closeModal={toggleNewRepositoryModal}
     />
   {/if}
+  <div slot="unlogin" class="text-center text-sm text-gray-600 py-4">
+    <a href="/~">Tools</a>
+  </div>
 </Home>

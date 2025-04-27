@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import { autoFocus } from "$lib/utils/actions/autoFocus";
   import { encode64 } from "$lib/utils/encode";
+  import AutoHeightTextarea from "./AutoHeightTextarea.svelte";
 
   export let token = "";
   export let owner = "";
@@ -31,14 +32,14 @@
   //   }
   // });
 
-  function adjustHeight() {
-    if (textspan) {
-      textspan.innerText = fileContent + " ";
-    }
-  }
+  // function adjustHeight() {
+  //   if (textspan) {
+  //     textspan.innerText = fileContent + " ";
+  //   }
+  // }
 
   function handleContentChange() {
-    adjustHeight();
+    // adjustHeight();
 
     if (!repo) return;
 
@@ -100,6 +101,36 @@
   onMount(() => {});
 </script>
 
+<AutoHeightTextarea
+  class={$$props.class}
+  bind:value={fileContent}
+  on:input={handleContentChange}
+  disabled={readOnly}
+  autofocus={!readOnly}
+  shortcuts={[
+    {
+      key: "s",
+      meta: true,
+      stop: true,
+      handle: saveContent,
+    },
+    {
+      key: "s",
+      ctrl: true,
+      stop: true,
+      handle: saveContent,
+    },
+    {
+      key: "Escape",
+      handle: exitEditMode,
+    },
+    {
+      key: "i",
+      handle: enterWriteMode,
+    },
+  ]}
+></AutoHeightTextarea>
+<!-- 
 <div class={$$props.class}>
   <span bind:this={textspan} class={$$props.class}></span>
   <textarea
@@ -163,4 +194,4 @@
     overflow: hidden;
     z-index: 4;
   }
-</style>
+</style> -->

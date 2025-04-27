@@ -66,7 +66,7 @@
 
 <Modal class="p-6" bind:isOpen {closeModal}>
   <h2 class="text-2xl font-bold mb-4">创建新笔记</h2>
-  <h3>笔记仓库：{repoName}</h3>
+  <h3 class=" font-bold py-4">新笔记位于：{repoName}</h3>
   <div class="mb-4 p-3 bg-red-100 text-red-700 rounded {error ? '' : 'hidden'}">
     {error}
   </div>

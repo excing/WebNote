@@ -28,7 +28,7 @@
 </script>
 
 <!-- // src/routes/login/+page.svelte -->
-<div class="container">
+<div class="container flex-1">
   <h1 class="text-2xl">我的笔记</h1>
   <p>使用您的GitHub账户登录以管理笔记</p>
 
@@ -54,9 +54,6 @@
     margin: 4rem auto;
     padding: 2rem;
     text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   h1 {

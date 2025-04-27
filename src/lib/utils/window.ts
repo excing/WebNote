@@ -109,12 +109,17 @@ export function keyboardShortcut(
 
 export function keyboardVisible(node: HTMLElement, handle: (height: number, isKeyboardVisible: boolean) => void) {
   let timeer: number;
+  let windowInnerHeight = -1;
   function update() {
     const visualViewport = window.visualViewport;
     if (visualViewport && 0 < visualViewport.height) {
+      if (-1 == windowInnerHeight) {
+        windowInnerHeight = visualViewport.height;
+        return;
+      }
       clearInterval(timeer);
       timeer = setTimeout(() => {
-        handle(visualViewport.height, 200 < Math.abs(window.innerHeight - visualViewport.height));
+        handle(visualViewport.height, 200 < Math.abs(windowInnerHeight - visualViewport.height));
       }, 100);
     }
   }

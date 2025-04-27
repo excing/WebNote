@@ -8,6 +8,9 @@
   export let autofocus: boolean = false;
   export let shortcuts: KeyboardShortcut[] = [];
 
+  export let style = "";
+  export let flex = "";
+
   $: {
     if (textspan) {
       textspan.innerText = `${value} `;
@@ -17,10 +20,11 @@
   let textspan: HTMLElement;
 </script>
 
-<div>
-  <span bind:this={textspan} class={$$props.class}></span>
+<div class={flex}>
+  <span bind:this={textspan} class={$$props.class} {style}></span>
   <textarea
     class={$$props.class}
+    {style}
     bind:value
     on:input
     {disabled}

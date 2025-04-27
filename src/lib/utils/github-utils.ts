@@ -15,7 +15,7 @@ export function parseRepositoryDescription(repository: GitRepository) {
     }
     const noteRepo = JSON.parse(repository.description || "");
     const repoName = noteRepo ? (noteRepo.name || repository.name) : repository.name;
-    const repoDesc = noteRepo ? (noteRepo.desc || repository.description) : repository.description;
+    const repoDesc = noteRepo ? (noteRepo.description || repository.description) : repository.description;
     return {
       name: repoName,
       description: repoDesc,

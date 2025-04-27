@@ -130,7 +130,7 @@
       closeModal={toggleNewRepositoryModal}
     />
   {/if}
-  <div slot="unlogin" class="text-center text-sm text-gray-600 py-4">
+  <div slot="unlogin" class="text-sm text-gray-600 py-4">
     <a href="/~">Tools</a>
   </div>
 </Home>

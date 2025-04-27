@@ -26,13 +26,20 @@
   $: isDefaultRepository =
     $githubAuth.defaultRepo && $githubAuth.defaultRepo.id === repository.id;
 
+  function toggleSelection2() {
+    if (isSelected) {
+      githubAuth.removeNoteRepo(repository.id);
+    } else {
+      githubAuth.addNoteRepo(repository);
+    }
+  }
+
   function toggleSelection() {
     if (isSelected) {
       if (isRemove) {
         githubAuth.removeNoteRepo(repository.id);
-      } else {
-        isRemove = true;
       }
+      isRemove = !isRemove;
     } else {
       githubAuth.addNoteRepo(repository);
     }
@@ -142,14 +149,14 @@
   </div>
   <div class:hidden={!isManagerVisible} class="flex justify-end">
     <button
-      on:click|preventDefault={toggleSelection}
+      on:click|preventDefault={toggleSelection2}
       class={`px-4 py-2 text-sm transition-colors rounded ${
         isSelected
           ? "bg-red-100 text-red-700 hover:bg-red-200"
           : "bg-blue-100 text-blue-700 hover:bg-blue-200"
       }`}
     >
-      {isSelected ? (isRemove ? "确认移除" : "移除") : "添加"}
+      {isSelected ? "移除" : "添加"}
     </button>
   </div>
 </a>

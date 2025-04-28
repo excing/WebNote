@@ -27,6 +27,8 @@
 
   let hasUpdate = false;
 
+  let copyButtonText = "";
+
   $: buttonText = isReadOnly ? "编辑模式" : hasUpdate ? "同步" : "浏览模式";
 
   $: buttonColor = isReadOnly
@@ -38,6 +40,22 @@
     if (isReadOnly) isReadOnly = false;
     else if (hasUpdate) editer.saveContent();
     else isReadOnly = true;
+  }
+
+  function handleCopy() {
+    navigator.clipboard
+      .writeText(fileContent)
+      .then(() => {
+        copyButtonText = "Copied!";
+      })
+      .catch(() => {
+        copyButtonText = "Failed";
+      })
+      .finally(() => {
+        setTimeout(() => {
+          copyButtonText = "";
+        }, 2000);
+      });
   }
 
   function onEditorSyncError(code: number, err: string) {}
@@ -91,6 +109,14 @@
         class:animate-spin={isUpdating}
         class:hidden={!isUpdating}
       ></span>
+      <button
+        class="p-1 hover:bg-gray-200 rounded flex flex-row items-center"
+        aria-label="copy"
+        on:click={handleCopy}
+      >
+        <span class="ic-copy w-5 h-5" class:animate-spin={isUpdating}></span>
+        <span>{copyButtonText}</span>
+      </button>
       <button
         class="text-sm text-white rounded py-1 px-4 {buttonColor} disabled:opacity-50"
         disabled={isUpdating}

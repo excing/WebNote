@@ -23,21 +23,6 @@
   export let isUpdating = false;
   let updatingContent = fileContent;
 
-  let textspan: HTMLElement;
-
-  // SvelteKit 导航守卫
-  // beforeNavigate((navigation) => {
-  //   if (!confirm("未保存的更改将丢失，确定要离开吗？")) {
-  //     navigation.cancel();
-  //   }
-  // });
-
-  // function adjustHeight() {
-  //   if (textspan) {
-  //     textspan.innerText = fileContent + " ";
-  //   }
-  // }
-
   function handleContentChange() {
     // adjustHeight();
 
@@ -130,68 +115,3 @@
     },
   ]}
 ></AutoHeightTextarea>
-<!-- 
-<div class={$$props.class}>
-  <span bind:this={textspan} class={$$props.class}></span>
-  <textarea
-    class={$$props.class}
-    style="overflow-y: hidden;"
-    bind:value={fileContent}
-    on:input={handleContentChange}
-    disabled={readOnly}
-    use:autoFocus={!readOnly}
-    use:keyboardShortcut={[
-      {
-        key: "s",
-        meta: true,
-        stop: true,
-        handle: saveContent,
-      },
-      {
-        key: "s",
-        ctrl: true,
-        stop: true,
-        handle: saveContent,
-      },
-      {
-        key: "Escape",
-        handle: exitEditMode,
-      },
-      {
-        key: "i",
-        handle: enterWriteMode,
-      },
-    ]}
-  ></textarea>
-</div>
-
-<style>
-  div {
-    position: relative;
-    z-index: 5;
-  }
-  span {
-    display: block;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    width: 100%;
-    height: 100%;
-    resize: none;
-    outline: none;
-    border: none;
-    overflow: hidden;
-    visibility: hidden; /* 一定不要少了给它隐藏哦，留个站位 */
-  }
-  textarea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    resize: none;
-    outline: none;
-    border: none;
-    overflow: hidden;
-    z-index: 4;
-  }
-</style> -->

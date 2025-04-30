@@ -12,9 +12,9 @@ export function decode64(text: string): string {
 export function encode64File(file: File) {
   const reader = new FileReader()
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve: (value: string) => void, reject) => {
     reader.onload = function (event: any) {
-      const fileContent = event.target.result
+      const fileContent: string = event.target.result
       if (fileContent) {
         resolve(fileContent.split(',')[1])
       } else {

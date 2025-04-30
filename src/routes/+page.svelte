@@ -41,12 +41,8 @@
           {#if showAllHistoryNotes || i < 3}
             <ContentItem
               isMenuVisible={false}
-              type={note.content.type}
               repo={note.repo}
-              path={note.content.path}
-              name={note.content.name}
-              sha={note.content.sha}
-              size={note.content.size}
+              content={note.content}
             />
           {/if}
         {/each}

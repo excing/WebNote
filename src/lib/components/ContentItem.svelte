@@ -4,22 +4,34 @@
   import Dropdown from "./Dropdown.svelte";
   import { createEventDispatcher } from "svelte";
   import RenameFileModal from "./RenameFileModal.svelte";
+  import { createGitHubRepoManager, type GitContent } from "$lib/utils/github";
+  import { githubAuth } from "$lib/stores/githubAuth";
   const dispatch = createEventDispatcher();
 
-  export let type;
+  export let content: GitContent | null = null;
   export let repo;
-  export let path;
-  export let name;
-  export let sha = "";
-  export let size;
-  export let url = "";
   export let isMenuVisible = true;
+  export let url = "";
+
+  $: type = content ? content.type : "dir";
+  $: path = content ? content.path : "";
+  $: name = content ? content.name : "..";
+  $: sha = content ? content.sha : "";
+  $: size = content ? content.size : 0;
 
   let isDeleteFile = false;
   let isRenameFile = false;
 
   $: href =
     url || (type === "dir" ? `/${repo}/${path}` : `/${repo}/${path}/write`);
+
+  function handleDownloadContent() {
+    if (content) {
+      const github = createGitHubRepoManager($githubAuth.accessToken || "");
+      github.downloadContent(content);
+      dispatch("downloaded");
+    }
+  }
 </script>
 
 <div class="flex items-center">
@@ -37,6 +49,14 @@
   {/if}
   {#if isMenuVisible}
     <Dropdown size={4} class="flex flex-col w-42" on:opened={() => {}}>
+      <button
+        class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        class:hidden={"dir" === type}
+        data-close-dropdown
+        on:click|preventDefault={handleDownloadContent}
+      >
+        下载
+      </button>
       <button
         class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
         data-close-dropdown

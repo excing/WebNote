@@ -90,6 +90,7 @@
   class={$$props.class}
   bind:value={fileContent}
   on:input={handleContentChange}
+  on:files
   disabled={readOnly}
   autofocus={!readOnly}
   shortcuts={[

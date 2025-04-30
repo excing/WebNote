@@ -3,9 +3,13 @@
   import Home from "$lib/components/Home.svelte";
   import Loader from "$lib/components/Loader.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
+  import UploadButton from "$lib/components/UploadButton.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
   import { decode64 } from "$lib/utils/encode.js";
-  import { createGitHubRepoManager } from "$lib/utils/github.js";
+  import {
+    createGitHubRepoManager,
+    type GitContent,
+  } from "$lib/utils/github.js";
   import { pathname } from "$lib/utils/path.js";
   import { countWords } from "$lib/utils/string";
   import { onMount } from "svelte";
@@ -18,6 +22,7 @@
   let isLoading = true;
   let error: any;
 
+  let uploader: UploadButton;
   let editer: Editor;
   let isUpdating = false;
   let isReadOnly = true;
@@ -58,7 +63,27 @@
       });
   }
 
-  function onEditorSyncError(code: number, err: string) {}
+  function handleUploadFiles(e: any) {
+    console.log(e.detail);
+
+    uploader.uploadFiles(e.detail);
+  }
+
+  function handleUploadFinished(e: any) {
+    let files: { content: GitContent }[] = e.detail;
+
+    let filesMD = files
+      .map((file) => {
+        let downloadURL = new URL(file.content.download_url);
+        return `![${file.content.name}](${downloadURL.origin + downloadURL.pathname})`;
+      })
+      .join("\n");
+    fileContent = `${fileContent}\n${filesMD}`;
+  }
+
+  function onEditorSyncError(code: number, err: string) {
+    alert(`文件同步失败 (${code})\n${err}`);
+  }
 
   onMount(() => {
     isLoading = true;
@@ -117,6 +142,18 @@
         <span class="ic-copy w-5 h-5" class:animate-spin={isUpdating}></span>
         <span>{copyButtonText}</span>
       </button>
+      <UploadButton
+        bind:this={uploader}
+        token={$githubAuth.accessToken || ""}
+        owner={$githubAuth.user.login}
+        repo={data.repo}
+        path="Uploads"
+        accept="image/*"
+        class="p-1 hover:bg-gray-200 rounded {isReadOnly ? 'hidden' : ''}"
+        on:finished={handleUploadFinished}
+        ><span class="ic-upload w-5 h-5"></span>
+        <span slot="uploading">Uploading...</span>
+      </UploadButton>
       <button
         class="text-sm text-white rounded py-1 px-4 {buttonColor} disabled:opacity-50"
         disabled={isUpdating}
@@ -147,6 +184,7 @@
         bind:hasUpdate
         bind:fileContent
         bind:lastSavedSha
+        on:files={handleUploadFiles}
         class="w-full min-h-[100dvh] text-xl rounded disabled:border-none focus:border-none focus:outline-none"
         token={$githubAuth.accessToken || ""}
         repo={data.repo}

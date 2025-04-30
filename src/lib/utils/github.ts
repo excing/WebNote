@@ -1,5 +1,7 @@
 // github-repo-manager.ts
 
+import { decodeAndDownloadBase64WithoutMime, downloadFile } from "./github-utils";
+
 export interface GitRepository {
   id: number;
   name: string;
@@ -19,6 +21,7 @@ export interface GitContent {
   path: string;
   sha: string;
   size: number;
+  url: string;
   html_url: string;
   download_url: string;
   type: string;
@@ -63,7 +66,7 @@ export class GitHubRepoManager {
     const { method = 'GET', body, params } = options;
 
     // 处理查询参数
-    let url = `${this.baseUrl}${endpoint}`;
+    let url = `${this.baseUrl}${endpoint.replace(this.baseUrl, '')}`;
     if (params && Object.keys(params).length > 0) {
       const queryParams = new URLSearchParams();
       for (const [key, value] of Object.entries(params)) {
@@ -262,6 +265,19 @@ export class GitHubRepoManager {
       body
     });
   }
+
+  async downloadContent(content: GitContent) {
+    if (content.type === 'dir') return;
+    downloadFile(content.download_url, content.name)
+      .catch((err: any) => {
+        if (err.status && err.status == 429) {
+          this.request<GitContent>(content.url).then((content: GitContent) => {
+            decodeAndDownloadBase64WithoutMime(content.content, content.name);
+          })
+        }
+      })
+  }
+
 
   /**
    * 删除文件

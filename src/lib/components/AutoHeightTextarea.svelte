@@ -37,7 +37,7 @@
     const files = e.dataTransfer?.files;
 
     if (files && files.length > 0) {
-      dispatch("files", Array.from(files));
+      dispatch("files", files);
     }
   }
 </script>

@@ -7,6 +7,7 @@
   import LoadRepository from "$lib/components/LoadRepository.svelte";
   import MultiNavigation from "$lib/components/MultiNavigation.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
+  import UploadButton from "$lib/components/UploadButton.svelte";
   import { githubAuth } from "$lib/stores/githubAuth";
   import { parseRepositoryDescription } from "$lib/utils/github-utils.js";
   import type { GitRepository } from "$lib/utils/github.js";
@@ -26,6 +27,10 @@
 
   function toggleNewFileModal() {
     isNewFile = !isNewFile;
+  }
+
+  function handleReloadContents() {
+    loadContentsEl.reload();
   }
 </script>
 
@@ -59,12 +64,24 @@
     <section class="">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">我的笔记</h2>
-        <button
-          class="text-sm px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          on:click={toggleNewFileModal}
-        >
-          新建笔记
-        </button>
+        <div class="flex flex-row">
+          <UploadButton
+            token={$githubAuth.accessToken || ""}
+            owner={$githubAuth.user.login}
+            repo={data.repo}
+            path={data.path}
+            class="mx-2 p-1 hover:bg-gray-200 rounded"
+            on:finished={handleReloadContents}
+            ><span class="ic-upload w-5 h-5"></span>
+            <span slot="uploading">Uploading...</span>
+          </UploadButton>
+          <button
+            class="text-sm px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            on:click={toggleNewFileModal}
+          >
+            新建笔记
+          </button>
+        </div>
       </div>
 
       {#if contents.length == 0}
@@ -81,30 +98,14 @@
 
       <div class="space-y-3">
         {#if data.path}
-          <ContentItem
-            type="dir"
-            repo={data.repo}
-            path={data.path}
-            name=".."
-            size={0}
-            url={prevPath}
-            isMenuVisible={false}
-          />
+          <ContentItem repo={data.repo} url={prevPath} isMenuVisible={false} />
         {/if}
         {#each contents as content}
           <ContentItem
-            type={content.type}
+            {content}
             repo={data.repo}
-            path={content.path}
-            name={content.name}
-            sha={content.sha}
-            size={content.size}
-            on:deleted={() => {
-              loadContentsEl.reload();
-            }}
-            on:renamed={() => {
-              loadContentsEl.reload();
-            }}
+            on:deleted={handleReloadContents}
+            on:renamed={handleReloadContents}
           />
         {/each}
       </div>

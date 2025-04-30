@@ -28,7 +28,9 @@
   function handleDownloadContent() {
     if (content) {
       const github = createGitHubRepoManager($githubAuth.accessToken || "");
-      github.downloadContent(content);
+      github.downloadContent(content).catch((err: any) => {
+        alert(err.message);
+      });
       dispatch("downloaded");
     }
   }

@@ -268,12 +268,14 @@ export class GitHubRepoManager {
 
   async downloadContent(content: GitContent) {
     if (content.type === 'dir') return;
-    downloadFile(content.download_url, content.name)
+    return downloadFile(content.download_url, content.name)
       .catch((err: any) => {
         if (err.status && err.status == 429) {
-          this.request<GitContent>(content.url).then((content: GitContent) => {
+          return this.request<GitContent>(content.url).then((content: GitContent) => {
             decodeAndDownloadBase64WithoutMime(content.content, content.name);
           })
+        } else {
+          throw err;
         }
       })
   }

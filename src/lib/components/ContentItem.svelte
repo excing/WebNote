@@ -38,13 +38,13 @@
 
 <div class="flex items-center">
   {#if type === "dir"}
-    <a {href} class="flex-1 text-lg flex flex-row items-center">
-      <div class="mr-2 h-5 w-5 ic-dir ic-c-primary"></div>
+    <a {href} class="flex-1 text-lg flex flex-row items-center break-all truncate">
+      <div class="mr-2 h-5 w-5 ic-dir ic-c-primary shrink-0"></div>
       {name}
     </a>
   {:else}
-    <a {href} class="flex-1 text-lg flex flex-row items-center">
-      <div class="mr-2 h-5 w-5 ic-file ic-c-success"></div>
+    <a {href} class="flex-1 text-lg flex flex-row items-center break-all truncate">
+      <div class="mr-2 h-5 w-5 ic-file ic-c-success shrink-0"></div>
       {name}
       <span class="text-sm">({filesize(size)})</span>
     </a>

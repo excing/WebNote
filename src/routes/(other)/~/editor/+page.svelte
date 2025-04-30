@@ -1,6 +1,5 @@
 <script lang="ts">
   import AutoHeightTextarea from "$lib/components/AutoHeightTextarea.svelte";
-  import Editor from "$lib/components/Editor.svelte";
   import { keyboardVisible } from "$lib/utils/window";
 
   let isEditor = true;
@@ -46,6 +45,9 @@
         ? 'max-h-90'
         : 'min-h-dvh'}"
       style={keyboardOK ? "overflow-y: auto;" : ""}
+      on:files={(e) => {
+        console.log(e.detail);
+      }}
     ></AutoHeightTextarea>
     <div class="bg-gray-200" class:hidden={!keyboardOK}>Footer bar</div>
   {:else}

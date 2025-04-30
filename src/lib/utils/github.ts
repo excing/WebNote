@@ -257,7 +257,7 @@ export class GitHubRepoManager {
     if (sha) body.sha = sha;
     if (branch) body.branch = branch;
 
-    return this.request(`/repos/${owner}/${repo}/contents/${path}`, {
+    return this.request<GitContent>(`/repos/${owner}/${repo}/contents/${path}`, {
       method: 'PUT',
       body
     });

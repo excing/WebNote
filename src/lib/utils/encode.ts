@@ -8,3 +8,19 @@ export function decode64(text: string): string {
     Uint8Array.from(atob(text), (c) => c.charCodeAt(0)),
   );
 }
+
+export function encode64File(file: File) {
+  const reader = new FileReader()
+
+  return new Promise((resolve, reject) => {
+    reader.onload = function (event: any) {
+      const fileContent = event.target.result
+      if (fileContent) {
+        resolve(fileContent.split(',')[1])
+      } else {
+        reject("Read file content failed")
+      }
+    }
+    reader.readAsDataURL(file)
+  })
+}

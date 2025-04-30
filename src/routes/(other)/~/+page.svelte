@@ -3,4 +3,5 @@
   <a href="/~/editor">编辑器</a>
   <a href="/~/svg2css">SVG to CSS</a>
   <a href="/~/svg.editor">SVG Editor</a>
+  <a href="/~/file.selecter">File 选择器</a>
 </div>

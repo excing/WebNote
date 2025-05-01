@@ -31,6 +31,17 @@
   </div>
 
   <!-- 菜单项 -->
+  <a
+    href="https://github.com/excing/WebNote"
+    target="_blank"
+    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+    role="menuitem"
+    tabindex="-1"
+    data-close-dropdown
+  >
+    <span class="mr-3 ic-github h-5 w-5"></span>
+    GitHub
+  </a>
   {#each menuItems as item}
     <a
       href="/{item.id}"

@@ -6,10 +6,11 @@
   import RenameFileModal from "./RenameFileModal.svelte";
   import { createGitHubRepoManager, type GitContent } from "$lib/utils/github";
   import { githubAuth } from "$lib/stores/githubAuth";
+  import { goto } from "$app/navigation";
   const dispatch = createEventDispatcher();
 
   export let content: GitContent | null = null;
-  export let repo;
+  export let repo = "";
   export let isMenuVisible = true;
   export let url = "";
 
@@ -26,12 +27,13 @@
     url || (type === "dir" ? `/${repo}/${path}` : `/${repo}/${path}/write`);
 
   function handleDownloadContent() {
-    if (content) {
-      const github = createGitHubRepoManager($githubAuth.accessToken || "");
-      github.downloadContent(content).catch((err: any) => {
-        alert(err.message);
-      });
-      dispatch("downloaded");
+    if (content && "dir" !== content.type) {
+      // const github = createGitHubRepoManager($githubAuth.accessToken || "");
+      // github.downloadContent(content).catch((err: any) => {
+      //   alert(err.message);
+      // });
+      // dispatch("downloaded");
+      goto(`/${repo}/${path}/dl`);
     }
   }
 </script>

@@ -121,6 +121,7 @@ const mimeTypeMap: Record<string, string> = {
   'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   'txt': 'text/plain',
   'csv': 'text/csv',
+  'md': 'text/markdown',
 
   // 压缩文件
   'zip': 'application/zip',
@@ -141,12 +142,32 @@ const mimeTypeMap: Record<string, string> = {
   'bin': 'application/octet-stream'
 };
 
-function getMimeTypeFromFilename(filename: string): string {
+export function getMimeTypeFromFilename(filename: string): string {
   // 提取文件扩展名
   const extension = filename.split('.').pop()?.toLowerCase() || 'bin';
 
   // 返回对应的 MIME 类型，未知类型使用默认的二进制流类型
   return mimeTypeMap[extension] || 'application/octet-stream';
+}
+
+export function decode64AndReturnBlob(
+  base64String: string,
+  mimeType?: string) {
+  // 1. 将 Base64 字符串转换为 Blob
+  const byteCharacters = atob(base64String);
+  const byteNumbers = new Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: mimeType });
+
+  // 2. 创建下载链接并触发下载
+  const blobUrl = URL.createObjectURL(blob);
+
+  return blobUrl;
 }
 
 export function decodeAndDownloadBase64WithoutMime(
@@ -164,29 +185,8 @@ export function decodeAndDownloadBase64(
   mimeType?: string
 ): void {
   try {
-    // 1. 将 Base64 字符串转换为 Blob
-    const byteCharacters = atob(base64String);
-    const byteNumbers = new Array(byteCharacters.length);
-
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: mimeType });
-
-    // 2. 创建下载链接并触发下载
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = blobUrl;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-
-    // 清理
-    URL.revokeObjectURL(blobUrl);
-    document.body.removeChild(a);
+    const blobUrl = decode64AndReturnBlob(base64String, mimeType);
+    downloadBlob(filename, blobUrl);
   } catch (error) {
     console.error('Base64 decode and download failed:', error);
     throw error;
@@ -208,4 +208,17 @@ export function decodeDataUrlAndDownload(
   const base64Data = matches[2];
 
   decodeAndDownloadBase64(base64Data, filename, mimeType);
+}
+
+export function downloadBlob(filename: string, blobUrl: string) {
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = blobUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+
+  // 清理
+  // URL.revokeObjectURL(blobUrl);
+  document.body.removeChild(a);
 }

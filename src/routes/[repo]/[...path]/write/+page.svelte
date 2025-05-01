@@ -176,7 +176,7 @@
         >返回首页
       </a>
     {:else}
-      <h1 class="text-center text-xl font-bold md:hidden">{title}</h1>
+      <h1 class="text-center text-xl font-bold md:hidden break-all">{title}</h1>
       <Editor
         bind:this={editer}
         bind:isUpdating

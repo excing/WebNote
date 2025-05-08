@@ -131,7 +131,6 @@
       <span class="text-sm text-gray-600">{countWords(fileContent)}字</span>
       <span
         class="ic-refresh w-4 h-4 block"
-        class:animate-spin={isUpdating}
         class:hidden={!isUpdating}
       ></span>
       <button
@@ -139,7 +138,7 @@
         aria-label="copy"
         on:click={handleCopy}
       >
-        <span class="ic-copy w-5 h-5" class:animate-spin={isUpdating}></span>
+        <span class="ic-copy w-5 h-5"></span>
         <span>{copyButtonText}</span>
       </button>
       <UploadButton

@@ -30,7 +30,7 @@
 
     // Debounce save
     if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => saveContent(), 3000);
+    saveTimer = setTimeout(() => saveContent(), 15000);
   }
 
   export function saveContent() {

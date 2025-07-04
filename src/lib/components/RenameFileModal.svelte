@@ -27,8 +27,9 @@
 
   async function handleSubmit() {
     isLoading = true;
+    const newName = nname.trim();
     const parent = parentPath(path);
-    const npath = parent ? `${parentPath(path)}/${nname}` : nname;
+    const npath = parent ? `${parentPath(path)}/${newName}` : newName;
     const request =
       type === "dir"
         ? github.renameDirectory(
